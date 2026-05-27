@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     CSS de la página
+═══════════════════════════════════════════════════════════ -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/inicio.css') }}">
+
+<!-- ═══════════════════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════════════════ -->
+<section class="hero-inicio">
+  <div class="hero-grid-bg"></div>
+  <div class="container py-5 position-relative">
+    <div class="row align-items-center min-vh-75">
+
+      <div class="col-lg-7 hero-texto">
+        <div class="hero-badge mb-4">
+          <span class="dot-pulse"></span>
+          Entorno de ejecución real · Python interactivo
+        </div>
+        <h1 class="hero-titulo">
+          Aprende <span class="titulo-acento">POO</span><br>desde cero
+        </h1>
+        <p class="hero-subtitulo">
+          20 bloques temáticos, 60+ ejercicios interactivos y una consola real
+          en el navegador. Sin instalar nada.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="/ejercicios" class="btn-hero-primary">
+            Comenzar ahora <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+          <a href="/acerca-de" class="btn-hero-secondary">
+            Sobre el proyecto
+          </a>
+        </div>
+      </div>
+
+      <div class="col-lg-5 d-none d-lg-flex justify-content-center">
+        <div class="hero-code-card">
+          <div class="code-card-bar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="ms-2 code-card-title">main.py</span>
+          </div>
+          <pre class="code-card-pre"><span class="cc-kw">class</span> <span class="cc-cl">Persona</span>:
+    <span class="cc-kw">def</span> <span class="cc-fn">__init__</span>(<span class="cc-self">self</span>, nombre, edad):
+        <span class="cc-self">self</span>.nombre = nombre
+        <span class="cc-self">self</span>.edad   = edad
+
+    <span class="cc-kw">def</span> <span class="cc-fn">saludar</span>(<span class="cc-self">self</span>):
+        <span class="cc-fn">print</span>(<span class="cc-str">f"Hola, soy {<span class="cc-self">self</span>.nombre}"</span>)
+
+<span class="cc-cm"># Instanciar un objeto</span>
+p = <span class="cc-cl">Persona</span>(<span class="cc-str">"Daniel"</span>, <span class="cc-num">20</span>)
+p.<span class="cc-fn">saludar</span>()</pre>
+          <div class="code-card-output">
+            <span class="output-prompt">▶</span> Hola, soy Daniel
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATS
+═══════════════════════════════════════════════════════════ -->
+<section class="stats-banda">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-num">20</span>
+        <span class="stat-lbl">Bloques temáticos</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <span class="stat-num">60<span class="stat-plus">+</span></span>
+        <span class="stat-lbl">Ejercicios guiados</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <span class="stat-num">100<span class="stat-plus">%</span></span>
+        <span class="stat-lbl">Interactivo en navegador</span>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat-item">
+        <span class="stat-num">0</span>
+        <span class="stat-lbl">Instalaciones necesarias</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     OBJETIVO + METODOLOGÍA + ENFOQUE
+═══════════════════════════════════════════════════════════ -->
+<section class="seccion-info container my-6">
+  <div class="row g-4 align-items-stretch">
+
+    <div class="col-md-4">
+      <div class="info-card info-card--objetivo h-100">
+        <div class="info-card-icon"><i class="bi bi-bullseye"></i></div>
+        <h3 class="info-card-titulo">Objetivo</h3>
+        <p class="info-card-texto">
+          Mapear el compendio completo de Programación Orientada a Objetos en Python
+          de forma interactiva en el navegador, eliminando la barrera de la terminal
+          y permitiendo experimentar con cada concepto en tiempo real.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="info-card info-card--metodo h-100">
+        <div class="info-card-icon"><i class="bi bi-diagram-3"></i></div>
+        <h3 class="info-card-titulo">Metodología</h3>
+        <p class="info-card-texto">
+          Cada bloque contiene tres laboratorios independientes. Los parámetros
+          se capturan desde formularios web, se procesan en el servidor mediante
+          clases Python reales y la salida se muestra en una consola simulada.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="info-card info-card--poo h-100">
+        <div class="info-card-icon"><i class="bi bi-box-seam"></i></div>
+        <h3 class="info-card-titulo">Enfoque POO estricto</h3>
+        <p class="info-card-texto">
+          Todo el backend sigue obligatoriamente el paradigma orientado a objetos.
+          Cada acción instancia una clase, procesa su estado interno y retorna
+          resultados a través de métodos bien definidos.
+        </p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     PLAN DE ESTUDIO — 20 BLOQUES
+═══════════════════════════════════════════════════════════ -->
+<section class="plan-estudio py-6">
+  <div class="container">
+
+    <div class="seccion-header text-center mb-5">
+      <span class="seccion-tag">Plan de estudio</span>
+      <h2 class="seccion-titulo">20 bloques · de lo básico a lo avanzado</h2>
+      <p class="seccion-sub">
+        Cada bloque cubre un concepto del compendio oficial con teoría,
+        código de ejemplo y laboratorios interactivos.
+      </p>
+    </div>
+
+    {% set bloques = [
+      { "num": "00", "titulo": "Introducción a la POO",
+        "desc": "Clase vs objeto, por qué usar POO, diferencia con programación estructurada.",
+        "ejemplo": "cli = Cliente(\"Daniel\")\nprint(cli.nombre)", "icono": "bi-mortarboard" },
+      { "num": "01", "titulo": "El Constructor __init__",
+        "desc": "Inicialización de objetos, parámetros por defecto, validaciones y @classmethod.",
+        "ejemplo": "def __init__(self, nombre, precio):\n    if precio < 0: raise ValueError()\n    self.precio = precio", "icono": "bi-braces" },
+      { "num": "02", "titulo": "Variables y Tipos de Datos",
+        "desc": "int, float, str, bool, list, tuple, dict, set, slicing y anotaciones de tipo.",
+        "ejemplo": "lista = [1, 2, 3, 4]\nprint(lista[1:3])  # [2, 3]", "icono": "bi-tags" },
+      { "num": "03", "titulo": "Operadores",
+        "desc": "Aritméticos, comparación, lógicos, == vs is y precedencia de operadores.",
+        "ejemplo": "a=[1,2]; b=[1,2]\nprint(a == b)  # True\nprint(a is b)  # False", "icono": "bi-calculator" },
+      { "num": "04", "titulo": "Entrada y Salida",
+        "desc": "print(), input(), f-strings, casting de tipos y errores comunes.",
+        "ejemplo": "nombre = input(\"Nombre: \")\nprint(f\"Hola, {nombre}\")", "icono": "bi-terminal" },
+      { "num": "05", "titulo": "Condicionales",
+        "desc": "if / elif / else, operador ternario, match-case y evaluación corta.",
+        "ejemplo": "if nota >= 90: print(\"A\")\nelif nota >= 80: print(\"B\")\nelse: print(\"C\")", "icono": "bi-signpost-split" },
+      { "num": "06", "titulo": "Bucles",
+        "desc": "for, while, range, enumerate, break, continue y list comprehension.",
+        "ejemplo": "pares = [x for x in range(10)\n         if x % 2 == 0]", "icono": "bi-arrow-repeat" },
+      { "num": "07", "titulo": "Funciones",
+        "desc": "*args, **kwargs, lambda, recursividad y retorno múltiple.",
+        "ejemplo": "def factorial(n):\n    if n == 0: return 1\n    return n * factorial(n-1)", "icono": "bi-box-arrow-in-right" },
+      { "num": "08", "titulo": "Listas",
+        "desc": "append, extend, pop, remove, sort, reverse, copy y referencia vs copia.",
+        "ejemplo": "nums = [5,3,8,1]\nnums.sort()\nprint(nums)  # [1,3,5,8]", "icono": "bi-list-ul" },
+      { "num": "09", "titulo": "Tuplas",
+        "desc": "Inmutabilidad, unpacking con *, recorrido y conversión a lista.",
+        "ejemplo": "primero, *medio, ultimo = (1,2,3,4,5)\nprint(medio)  # [2,3,4]", "icono": "bi-lock" },
+      { "num": "10", "titulo": "Diccionarios",
+        "desc": "Acceso con [] y .get(), update, items(), dict comprehension y anidados.",
+        "ejemplo": "for k, v in persona.items():\n    print(f\"{k}: {v}\")", "icono": "bi-journal-code" },
+      { "num": "11", "titulo": "Conjuntos (set)",
+        "desc": "Sin duplicados, unión, intersección, diferencia y diferencia simétrica.",
+        "ejemplo": "A = {1,2,3}; B = {3,4,5}\nprint(A & B)  # {3}", "icono": "bi-intersect" },
+      { "num": "12", "titulo": "Excepciones",
+        "desc": "try/except/else/finally, tipos de error, raise, assert y excepciones propias.",
+        "ejemplo": "try:\n    n = int(\"abc\")\nexcept ValueError as e:\n    print(e)", "icono": "bi-shield-exclamation" },
+      { "num": "13", "titulo": "Decoradores",
+        "desc": "Funciones que modifican otras funciones, wrapper, validación y logs.",
+        "ejemplo": "@mi_decorador\ndef saludar():\n    print(\"Hola mundo\")", "icono": "bi-stars" },
+      { "num": "14", "titulo": "Unpacking",
+        "desc": "Desempaquetado con *, ** en funciones, bucles y combinación de diccionarios.",
+        "ejemplo": "nums = [1, 2, 3]\nresult = suma(*nums)  # suma(1,2,3)", "icono": "bi-box-arrow-up-right" },
+      { "num": "15", "titulo": "Funciones de Orden Superior",
+        "desc": "map(), filter(), reduce() y combinación de funciones funcionales.",
+        "ejemplo": "cuadrados = list(map(\n    lambda x: x**2, [1,2,3,4]))", "icono": "bi-funnel" },
+      { "num": "16", "titulo": "Archivos y JSON",
+        "desc": "Lectura y escritura de .txt, modos r/w/a, json.dump y json.load.",
+        "ejemplo": "with open(\"datos.json\", \"w\") as f:\n    json.dump(datos, f, indent=2)", "icono": "bi-file-earmark-code" },
+      { "num": "17", "titulo": "Mixins",
+        "desc": "Clases auxiliares reutilizables, herencia múltiple y MRO de Python.",
+        "ejemplo": "class Sistema(ValidacionMixin):\n    def registrar(self, n, e):\n        self.validar_nombre(n)", "icono": "bi-puzzle" },
+      { "num": "18", "titulo": "Principios de POO",
+        "desc": "Abstracción, encapsulamiento, herencia, polimorfismo, @property y clases abstractas.",
+        "ejemplo": "class Cuenta:\n    def __init__(self):\n        self.__saldo = 0  # privado", "icono": "bi-diagram-2" },
+      { "num": "19", "titulo": "Relaciones UML en Código",
+        "desc": "Asociación, agregación, composición, herencia e interfaces en Python.",
+        "ejemplo": "class Venta(ICrud):      # interfaz\n    def __init__(self, cliente):  # agregación\n        self.detalles = []", "icono": "bi-share" }
+    ] %}
+
+    <div class="bloques-grid">
+      {% for b in bloques %}
+      <div class="bloque-card" style="--delay: {{ loop.index0 * 40 }}ms">
+        <div class="bloque-card-header">
+          <span class="bloque-num">{{ b.num }}</span>
+          <i class="bi {{ b.icono }} bloque-icono"></i>
+        </div>
+        <h4 class="bloque-titulo">{{ b.titulo }}</h4>
+        <p class="bloque-desc">{{ b.desc }}</p>
+        <div class="bloque-code">
+          <pre>{{ b.ejemplo }}</pre>
+        </div>
+        <a href="/curso/bloque{{ b.num }}/ejercicio/1" class="bloque-btn">
+          Ver ejercicios <i class="bi bi-arrow-right ms-1"></i>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════
+     CTA FINAL
+═══════════════════════════════════════════════════════════ -->
+<section class="cta-final">
+  <div class="container text-center py-6">
+    <h2 class="cta-titulo">¿Listo para empezar?</h2>
+    <p class="cta-sub">Entra al primer bloque y ejecuta tu primer objeto Python en segundos.</p>
+    <a href="/ejercicios" class="btn-hero-primary mt-3">
+      Ir al curso <i class="bi bi-arrow-right ms-2"></i>
+    </a>
+  </div>
+</section>
+
+{% endblock %}

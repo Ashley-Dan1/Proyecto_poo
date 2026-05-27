@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+
+<!-- ═══════════════════════════════════════════════════════════
+     CSS de la página
+═══════════════════════════════════════════════════════════ -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/acerca_de.css') }}">
+
+<div class="ad-page">
+  <div class="container">
+
+    <!-- ENCABEZADO -->
+    <div class="ad-header">
+      <div class="ad-tag">Acerca del proyecto</div>
+      <h1 class="ad-titulo">POO Academy</h1>
+      <p class="ad-subtitulo">
+        Plataforma interactiva para aprender Programación Orientada a Objetos
+        en Python directamente en el navegador.
+      </p>
+    </div>
+
+    <!-- FILA 1: Autor + Stack -->
+    <div class="row g-4 mb-4">
+
+      <!-- AUTOR -->
+      <div class="col-lg-5">
+        <div class="ad-card autor-card h-100">
+          <div class="ad-card-label"><i class="bi bi-person-badge"></i> Desarrollado por</div>
+
+          <div class="d-flex align-items-center gap-3 mb-3">
+            <div class="autor-avatar">
+              {{ plataforma.autor[0] | upper if plataforma.autor else "D" }}
+            </div>
+            <div>
+              <div class="autor-nombre">{{ plataforma.autor }}</div>
+              <div class="autor-rol">Desarrollador · Estudiante de Ingeniería</div>
+            </div>
+          </div>
+
+          <p class="autor-bio">
+            Proyecto académico desarrollado como compendio interactivo de
+            Programación Orientada a Objetos en Python. Cada bloque fue
+            construido siguiendo estrictamente el paradigma POO, con clases
+            reales ejecutándose en el servidor.
+          </p>
+
+          <div class="autor-links">
+            <a href="https://github.com" target="_blank" class="autor-link autor-link--github">
+              <i class="bi bi-github"></i> Ver en GitHub
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- STACK -->
+      <div class="col-lg-7">
+        <div class="ad-card stack-card h-100">
+          <div class="ad-card-label"><i class="bi bi-layers"></i> Stack tecnológico</div>
+          <div class="stack-grid">
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#4584b6;">🐍</span>
+              <span class="stack-name">Python 3</span>
+              <span class="stack-desc">Lógica y POO en el backend</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#ff7043;">🌶️</span>
+              <span class="stack-name">Flask</span>
+              <span class="stack-desc">Framework web y Blueprints</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#e67e22;">📄</span>
+              <span class="stack-name">HTML 5</span>
+              <span class="stack-desc">Templates con Jinja2</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#3498db;">🎨</span>
+              <span class="stack-name">CSS 3</span>
+              <span class="stack-desc">Estilos y diseño visual</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#f1c40f;">{ }</span>
+              <span class="stack-name">JSON</span>
+              <span class="stack-desc">Configuración de datos</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#7952b3;">🅱️</span>
+              <span class="stack-name">Bootstrap 5</span>
+              <span class="stack-desc">Grid y componentes UI</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#2ecc71;">🗄️</span>
+              <span class="stack-name">SQLite</span>
+              <span class="stack-desc">Base de datos de usuarios</span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-icon" style="color:#00d4ff;">⚡</span>
+              <span class="stack-name">Jinja2</span>
+              <span class="stack-desc">Motor de plantillas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FILA 2: Descripción + Métricas -->
+    <div class="row g-4">
+
+      <!-- DESCRIPCIÓN -->
+      <div class="col-lg-7">
+        <div class="ad-card desc-card h-100">
+          <div class="ad-card-label"><i class="bi bi-file-earmark-text"></i> Descripción del proyecto</div>
+
+          <p class="desc-texto">
+            <strong style="color:#d8eaf8;">POO Academy</strong> es un entorno de aprendizaje interactivo
+            que mapea el compendio oficial de Programación Orientada a Objetos en Python
+            dentro del navegador. El objetivo es eliminar la barrera de la terminal y
+            permitir que el estudiante experimente con cada concepto directamente
+            desde una interfaz web.
+          </p>
+          <p class="desc-texto">
+            La arquitectura sigue una estructura de
+            <strong style="color:#d8eaf8;">Blueprint por bloque</strong>,
+            donde cada módulo temático tiene su propio controlador y modelo.
+            Todo el código de backend instancia clases reales de Python, captura
+            la salida estándar y la retorna al navegador como consola simulada.
+          </p>
+
+          <div class="desc-pills">
+            <span class="desc-pill">POO estricta en backend</span>
+            <span class="desc-pill">Ejecución real en servidor</span>
+            <span class="desc-pill">Consola simulada en navegador</span>
+            <span class="desc-pill">20 blueprints independientes</span>
+            <span class="desc-pill">Sistema de progreso por usuario</span>
+            <span class="desc-pill">Autenticación con SQLite</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MÉTRICAS -->
+      <div class="col-lg-5">
+        <div class="ad-card metricas-card h-100">
+          <div class="ad-card-label"><i class="bi bi-bar-chart"></i> Métricas del proyecto</div>
+
+          <div class="metricas-grid">
+            <div class="metrica-item">
+              <div class="metrica-valor">20</div>
+              <div class="metrica-lbl">Bloques temáticos</div>
+            </div>
+            <div class="metrica-item">
+              <div class="metrica-valor">60<span>+</span></div>
+              <div class="metrica-lbl">Ejercicios</div>
+            </div>
+            <div class="metrica-item">
+              <div class="metrica-valor">20</div>
+              <div class="metrica-lbl">Blueprints Flask</div>
+            </div>
+            <div class="metrica-item">
+              <div class="metrica-valor">100<span>%</span></div>
+              <div class="metrica-lbl">Backend en POO</div>
+            </div>
+          </div>
+
+          <div class="info-tecnica">
+            <div class="info-tec-item">
+              <strong>Versión</strong>
+              {{ plataforma.version }}
+            </div>
+            <div class="info-tec-item">
+              <strong>Arquitectura</strong>
+              Flask Blueprints
+            </div>
+            <div class="info-tec-item">
+              <strong>Paradigma</strong>
+              OOP · MVC
+            </div>
+            <div class="info-tec-item">
+              <strong>Estado</strong>
+              <span class="estado-activo">● Operativo</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block contenido %}
+<div class="container my-5">
+    
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-8">
+            <h2 class="fw-bold mb-2">Dashboard Educativo de Módulos</h2>
+            <p class="text-muted">Explora de manera secuencial los 20 bloques del compendio oficial estructurados bajo clases.</p>
+        </div>
+        <div class="col-md-4 text-md-end">
+            <span class="badge bg-primary px-3 py-2">Progreso General: 100% Disponible</span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% set titulos = [
+            "Sintaxis Básica e Impresión", "Variables y Tipos de Datos", "Operadores Aritméticos", 
+            "Formateo de Cadenas", "Estructuras Condicionales", "Bucles Iterativos (for)", 
+            "Bucles de Condición (while)", "Listas y Métodos Nativos", "Tuplas y Sets (Inmutables)", 
+            "Diccionarios de Datos", "Funciones y Argumentos", "Manejo de Excepciones", 
+            "Decoradores de Código", "Desempaquetado (Unpacking)", "Funciones de Orden Superior", 
+            "Comprensión de Listas", "Manejo de Archivos I/O", "POO Clases y Objetos", 
+            "POO Herencia Avanzada", "POO Encapsulamiento Seguro"
+        ] %}
+
+        {% for i in range(20) %}
+        <div class="col-md-4 col-sm-6">
+            <div class="tarjeta-educativa h-100 p-4 bg-white d-flex flex-direction-column justify-content-between">
+                <div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-light text-primary fw-bold border">Bloque {% if i < 10 %}0{% endif %}{{ i }}</span>
+                        <span class="text-muted small"><i class="bi bi-star-fill text-warning me-1"></i>Académico</span>
+                    </div>
+                    <h5 class="fw-bold mb-2 text-dark">{{ titulos[i] }}</h5>
+                    <p class="small text-muted mb-4">Análisis modular y laboratorios interactivos correspondientes a las especificaciones del compendio.</p>
+                </div>
+                <div class="pt-3 border-top d-flex justify-content-between align-items-center mt-auto">
+                    <span class="small text-success fw-bold"><i class="bi bi-check2-circle me-1"></i>Listo</span>
+                    <a href="/curso/bloque{% if i < 10 %}0{% endif %}{{ i }}/ejercicio/1" class="btn btn-sm btn-primary px-4 rounded-pill">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

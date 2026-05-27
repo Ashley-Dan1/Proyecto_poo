@@ -1,0 +1,163 @@
+/* =====================================================================
+   SISTEMA DE ESTILOS HÍBRIDO: DOCS + DASHBOARD EDUCATIVO
+   ===================================================================== */
+:root {
+    --color-fondo-claro: #f8f9fa;
+    --color-fondo-oscuro: #0f172a; /* Slate 900 estilo Tailwind/React Docs */
+    --color-panel-oscuro: #1e293b;
+    --color-primario: #3b82f6; /* Azul Tecnológico */
+    --color-exito: #10b981; /* Verde Esmeralda */
+    --color-advertencia: #f59e0b;
+    --color-texto-oscuro: #1e293b;
+    --color-texto-mutado: #64748b;
+    --color-tarjeta-blanca: #ffffff;
+    --fuente-monospace: 'Fira Code', 'Consolas', monospace;
+}
+
+body {
+    background-color: var(--color-fondo-claro);
+    color: var(--color-texto-oscuro);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* NAVBAR OSCURA PREMIUM */
+.navbar-custom {
+    background-color: var(--color-fondo-oscuro) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.navbar-brand-custom {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #fff !important;
+}
+.navbar-brand-custom span {
+    color: var(--color-primario);
+}
+
+/* HERO SECTION (HOME) */
+.hero-poo {
+    background: linear-gradient(135deg, var(--color-fondo-oscuro) 0%, #1e1b4b 100%);
+    color: #fff;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+.hero-poo::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+/* CARDS MODERNAS CON SOMBRAS SUAVES */
+.tarjeta-educativa {
+    background-color: var(--color-tarjeta-blanca);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+.tarjeta-educativa:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    border-color: rgba(59,130,246,0.3);
+}
+
+/* SIDEBAR DE DOCUMENTACIÓN ESTILO NOTION/REACT */
+.sidebar-docs {
+    position: sticky;
+    top: 70px;
+    height: calc(100vh - 90px);
+    overflow-y: auto;
+    padding-right: 15px;
+}
+.enlace-sidebar {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    color: var(--color-texto-mutado);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.enlace-sidebar:hover {
+    background-color: #f1f5f9;
+    color: var(--color-texto-oscuro);
+}
+.enlace-sidebar.activo {
+    background-color: #e0f2fe;
+    color: #0369a1;
+    font-weight: 600;
+}
+
+/* BLOQUE DE CÓDIGO ESTILO VS CODE */
+.editor-codigo {
+    background-color: #1e1e2e; /* Color base VS Code / Catppuccin Mocha */
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid #313244;
+    position: relative;
+}
+.editor-codigo pre {
+    margin: 0;
+    font-family: var(--fuente-monospace);
+    font-size: 0.92rem;
+    color: #cdd6f4;
+    overflow-x: auto;
+}
+.badg-lenguaje {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 0.75rem;
+    color: #585b70;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* TERMINAL INTERACTIVA SIMULADA */
+.consola-simulada {
+    background-color: #000000;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+    min-height: 220px;
+    display: flex;
+    flex-direction: column;
+}
+.consola-linea {
+    font-family: var(--fuente-monospace);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+}
+.consola-salida {
+    color: #38bdf8; /* Celeste Terminal Inteligente */
+}
+.consola-prompt {
+    color: var(--color-exito);
+    margin-right: 8px;
+}
+.consola-vacia {
+    color: #475569;
+    font-style: italic;
+    text-align: center;
+    margin: auto;
+}
+
+/* FOOTER */
+.footer-custom {
+    background-color: var(--color-fondo-oscuro);
+    color: #94a3b8;
+    border-top: 1px solid #334155;
+    margin-top: auto;
+}
