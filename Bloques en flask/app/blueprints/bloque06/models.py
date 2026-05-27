@@ -1,87 +1,86 @@
 # =====================================================================
-# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 6: BUCLES (LOOPS)
+# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 6: BUCLES (for / while)
 # =====================================================================
 
 # ---------------------------------------------------------------------
-# EJERCICIO 1: Imprime los números del 1 al 10 usando un bucle for.
+# EJERCICIO 1: Imprime los números del 1 al 10 con while.
 # ---------------------------------------------------------------------
-class ContadorAscendente:
-    def __init__(self, limite_maximo: int):
-        self.limite = limite_maximo
+class ContadorWhile:
+    def __init__(self, limite: int):
+        self.limite = limite
 
-    def generar_conteo(self):
-        print(f"🔄 SECUENCIA NUMÉRICA CON BUCLE FOR (1 AL {self.limite})")
+    def contar(self):
+        print(f"🔄 BUCLE WHILE — Números del 1 al {self.limite}")
         print("--------------------------------------------------")
-        # El rango en Python es exclusivo al final, por eso sumamos 1
-        for numero in range(1, self.limite + 1):
-            print(f"👉 Número actual: {numero}")
-
-
-class GestorContadorFor:
-    @staticmethod
-    def ejecutar_demostracion(limite: int):
-        contador = ContadorAscendente(limite)
-        contador.generar_conteo()
-
-
-# ---------------------------------------------------------------------
-# EJERCICIO 2: Imprime los números del 10 al 1 usando un bucle while.
-# ---------------------------------------------------------------------
-class ContadorDescendente:
-    def __init__(self, inicio_conteo: int):
-        self.inicio = inicio_conteo
-
-    def disminuir_conteo(self):
-        print(f"⏳ CUENTA REGRESIVA CON BUCLE WHILE ({self.inicio} AL 1)")
-        print("--------------------------------------------------")
-        controlador = self.inicio
-        # El ciclo se ejecuta mientras la condición lógica sea verdadera
-        while controlador >= 1:
-            print(f"⏱️ Valor actual del bucle: {controlador}")
-            controlador -= 1  # Modificador crucial para evitar bucles infinitos
-        print("🏁 ¡Ciclo finalizado!")
+        contador = 1
+        while contador <= self.limite:
+            print(f"  {contador}")
+            contador += 1
+        print(f"\n✅ Bucle finalizado. Se ejecutó {self.limite} vez/veces.")
 
 
 class GestorContadorWhile:
     @staticmethod
-    def ejecutar_calculo(inicio: int):
-        contador = ContadorDescendente(inicio)
-        contador.disminuir_conteo()
+    def ejecutar_demostracion(limite: int):
+        ContadorWhile(limite).contar()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 3: Suma todos los números pares del 1 al 50.
+# EJERCICIO 2: Recorre lista de frutas con enumerate() → índice y nombre.
 # ---------------------------------------------------------------------
-class SumadorPares:
-    def __init__(self, rango_maximo: int):
-        self.rango = rango_maximo
-        self.acumulador_suma = 0
+class RecorredorFrutas:
+    def __init__(self, frutas: list):
+        self.frutas = frutas
 
-    def procesar_suma(self):
-        print(f"🧮 ACUMULACIÓN DE VALORES PARES (1 AL {self.rango})")
+    def recorrer_con_enumerate(self):
+        print("🍎 BUCLE FOR CON enumerate()")
         print("--------------------------------------------------")
-        
-        for numero in range(1, self.rango + 1):
-            # Condición para verificar si el número es par
-            if numero % 2 == 0:
-                self.acumulador_suma += numero
-                
-        print(f"✅ La suma total de los números pares encontrados es: {self.acumulador_suma}")
+        print(f"Lista: {self.frutas}\n")
+        for indice, fruta in enumerate(self.frutas):
+            print(f"  [{indice}] → {fruta}")
+        print("\n💡 enumerate() devuelve pares (índice, elemento) en cada iteración.")
 
 
-class GestorSumadorPares:
+class GestorFrutas:
     @staticmethod
-    def ejecutar_analisis(limite: int):
-        sumador = SumadorPares(limite)
-        sumador.procesar_suma()
+    def ejecutar_demostracion(lista_frutas: list):
+        RecorredorFrutas(lista_frutas).recorrer_con_enumerate()
+
+
+# ---------------------------------------------------------------------
+# EJERCICIO 3: Cuadrados de pares del 1 al N con list comprehension.
+# ---------------------------------------------------------------------
+class GeneradorCuadradosPares:
+    def __init__(self, limite: int):
+        self.limite = limite
+
+    def generar(self):
+        print(f"⚡ LIST COMPREHENSION — Cuadrados de pares del 1 al {self.limite}")
+        print("--------------------------------------------------")
+        cuadrados = [x**2 for x in range(1, self.limite + 1) if x % 2 == 0]
+        print(f"  Expresión : [x**2 for x in range(1, {self.limite + 1}) if x % 2 == 0]")
+        print(f"  Resultado : {cuadrados}")
+        print("\n💡 La cláusula 'if' dentro de la comprensión filtra solo los pares.")
+
+
+class GestorCuadradosPares:
+    @staticmethod
+    def ejecutar_demostracion(limite: int):
+        GeneradorCuadradosPares(limite).generar()
 
 
 # =====================================================================
-# FUNCIONES DISPARADORAS (Conectan con el controlador de Flask)
+# FUNCIONES DISPARADORAS
 # =====================================================================
-
 def ejecutar_ejercicio1(limite):
-    GestorContadorFor.ejecutar_demostracion(limite)
+    GestorContadorWhile.ejecutar_demostracion(limite)
+
+def ejecutar_ejercicio2(lista_frutas):
+    GestorFrutas.ejecutar_demostracion(lista_frutas)
+
+def ejecutar_ejercicio3(limite):
+    GestorCuadradosPares.ejecutar_demostracion(limite)
+
 
 def ejecutar_ejercicio2(inicio):
     GestorContadorWhile.ejecutar_calculo(inicio)
