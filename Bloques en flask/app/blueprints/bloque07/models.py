@@ -1,107 +1,94 @@
 # =====================================================================
-# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 7: LISTAS
+# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 7: FUNCIONES
 # =====================================================================
 
 # ---------------------------------------------------------------------
-# EJERCICIO 1: Crea una lista con 5 frutas, accede a la primera y última.
+# EJERCICIO 1: Función que calcule el doble de un número.
 # ---------------------------------------------------------------------
-class ContenedorFrutas:
-    def __init__(self, lista_inicial: list):
-        # Aseguramos que se guarde la lista provista
-        self.frutas = lista_inicial
+class CalculadorDoble:
+    def __init__(self, valor: float):
+        self.valor = valor
 
-    def acceder_extremos(self):
-        print("🍎 CONTROL DE INDEXACIÓN EN LISTAS")
+    def calcular(self):
+        resultado = self.valor * 2
+        print("🔢 FUNCIÓN — doble(x)")
         print("--------------------------------------------------")
-        print(f"Lista completa de frutas: {self.frutas}")
-        
-        # Acceso por índice positivo (primero) e índice negativo (último)
-        primera = self.frutas[0]
-        ultima = self.frutas[-1]
-        
-        print(f"🥇 Primera fruta (Índice 0) : {primera}")
-        print(f"🏁 Última fruta (Índice -1) : {ultima}")
+        print(f"  def doble(x): return x * 2")
+        print(f"\n  doble({self.valor}) → {resultado}")
 
 
-class GestorFrutas:
+class GestorDoble:
     @staticmethod
-    def ejecutar_demostracion(lista_web: list):
-        contenedor = ContenedorFrutas(lista_web)
-        contenedor.acceder_extremos()
+    def ejecutar_demostracion(numero: float):
+        CalculadorDoble(numero).calcular()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 2: Modifica el tercer elemento de la lista y añade una nueva fruta al final.
+# EJERCICIO 2: Función que sume con *args.
 # ---------------------------------------------------------------------
-class ManipuladorFrutas:
-    def __init__(self, lista_inicial: list):
-        self.frutas = list(lista_inicial)  # Clonamos para no alterar el original
+class SumadorArgs:
+    def __init__(self, numeros: list):
+        self.numeros = numeros
 
-    def modificar_y_expandir(self, nueva_fruta_pos3: str, fruta_final: str):
-        print("⚙️ ALTERACIÓN Y MUTABILIDAD DE ELEMENTOS")
+    def sumar(self):
+        total = sum(self.numeros)
+        print("🧮 FUNCIÓN CON *args — sumar_varios(*numeros)")
         print("--------------------------------------------------")
-        print(f"Estado inicial: {self.frutas}")
-        
-        # Modificación del tercer elemento (Índice 2)
-        self.frutas[2] = nueva_fruta_pos3
-        print(f"🔄 Reemplazado índice 2 por '{nueva_fruta_pos3}': {self.frutas}")
-        
-        # Inserción al final usando el método append
-        self.frutas.append(fruta_final)
-        print(f"➕ Añadida fruta al final (.append): {self.frutas}")
+        print(f"  Argumentos recibidos : {tuple(self.numeros)}")
+        print(f"  Proceso              : {' + '.join(str(n) for n in self.numeros)} = {total}")
+        print(f"\n  Resultado            : {total}")
+        print("\n💡 *args empaqueta todos los argumentos posicionales en una tupla.")
 
 
-class GestorModificaciones:
+class GestorSumadorArgs:
     @staticmethod
-    def ejecutar_calculo(lista_base: list, reemplazo: str, adicional: str):
-        manipulador = ManipuladorFrutas(lista_base)
-        manipulador.modificar_y_expandir(reemplazo, adicional)
+    def ejecutar_demostracion(lista: list):
+        SumadorArgs(lista).sumar()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 3: Elimina una fruta específica por su nombre y la última usando .pop().
+# EJERCICIO 3: Factorial recursivo.
 # ---------------------------------------------------------------------
-class DepuradorFrutas:
-    def __init__(self, lista_inicial: list):
-        self.frutas = list(lista_inicial)
+class CalculadorFactorial:
+    def __init__(self, n: int):
+        self.n = n
 
-    def extraer_elementos(self, fruta_a_remover: str):
-        print("🗑️ ELIMINACIÓN DE NODOS EN LISTAS (.REMOVE Y .POP)")
+    def factorial(self, n: int) -> int:
+        if n == 0:
+            return 1                    # caso base
+        return n * self.factorial(n - 1)  # llamada recursiva
+
+    def mostrar(self):
+        print("🧬 RECURSIVIDAD — factorial(n)")
         print("--------------------------------------------------")
-        print(f"Lista de partida: {self.frutas}")
-        
-        # Eliminación por valor específico con control de existencia
-        if fruta_a_remover in self.frutas:
-            self.frutas.remove(fruta_a_remover)
-            print(f"❌ Eliminada '{fruta_a_remover}' (.remove): {self.frutas}")
-        else:
-            print(f"⚠️ La fruta '{fruta_a_remover}' no se encontró para ser removida.")
-            
-        # Extracción del último elemento mediante pop
-        if len(self.frutas) > 0:
-            fruta_removida = self.frutas.pop()
-            print(f"🍿 Extraída la última fruta (.pop): '{fruta_removida}'")
-            print(f"📋 Estado final de la lista: {self.frutas}")
-        else:
-            print("⚠️ La lista está vacía, no se puede ejecutar .pop()")
+        if self.n < 0:
+            print("❌ El factorial no está definido para números negativos.")
+            return
+        resultado = self.factorial(self.n)
+        # Traza visual del proceso
+        pasos = " × ".join(str(i) for i in range(self.n, 0, -1)) + " × 1"
+        print(f"  factorial({self.n}) = {pasos}")
+        print(f"\n  Resultado : {resultado}")
+        print("\n💡 Caso base: factorial(0) = 1. Sin él el bucle sería infinito.")
 
 
-class GestorDepuracion:
+class GestorFactorial:
     @staticmethod
-    def ejecutar_analisis(lista_base: list, fruta_eliminar: str):
-        depurador = DepuradorFrutas(lista_base)
-        depurador.extraer_elementos(fruta_eliminar)
+    def ejecutar_demostracion(n: int):
+        CalculadorFactorial(n).mostrar()
 
 
 # =====================================================================
-# FUNCIONES DISPARADORAS (Conectan con el controlador de Flask)
+# FUNCIONES DISPARADORAS
 # =====================================================================
+def ejecutar_ejercicio1(numero):
+    GestorDoble.ejecutar_demostracion(numero)
 
-def ejecutar_ejercicio1(lista):
-    GestorFrutas.ejecutar_demostracion(lista)
+def ejecutar_ejercicio2(lista):
+    GestorSumadorArgs.ejecutar_demostracion(lista)
 
-def ejecutar_ejercicio2(lista, reemplazo, adicional):
-    GestorModificaciones.ejecutar_calculo(lista, reemplazo, adicional)
+def ejecutar_ejercicio3(n):
+    GestorFactorial.ejecutar_demostracion(n)
 
 def ejecutar_ejercicio3(lista, fruta_eliminar):
     GestorDepuracion.ejecutar_analisis(lista, fruta_eliminar)
