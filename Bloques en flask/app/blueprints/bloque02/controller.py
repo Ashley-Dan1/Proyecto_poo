@@ -1,68 +1,82 @@
-from flask import Blueprint, render_template, request
-from app.blueprints.bloque02.models import (
-    ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
-)
+# =====================================================================
+# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 6: BUCLES (for / while)
+# =====================================================================
 
-b02_bp = Blueprint('bloque02', __name__, template_folder='../../templates')
+# ---------------------------------------------------------------------
+# EJERCICIO 1: Imprime los números del 1 al 10 con while.
+# ---------------------------------------------------------------------
+class ContadorWhile:
+    def __init__(self, limite: int):
+        self.limite = limite
 
-DATOS_RETOS = {
-    1: {
-        "enunciado": "Crea la clase CuentaBancaria con titular y saldo (atributos de instancia). Instancia 2 cuentas con saldos diferentes.",
-        "codigo_fuente": "class CuentaBancaria:\n    def __init__(self, titular, saldo):\n        self.titular = titular\n        self.saldo = saldo",
-        "es_interactivo": False
-    },
-    2: {
-        "enunciado": "Agrega un atributo de clase llamado 'tasa_interes' = 0.05 y un método para aplicar este interés al saldo actual de la cuenta.",
-        "codigo_fuente": "class CuentaConInteres:\n    tasa_interes = 0.05  # Atributo de clase\n    def aplicar_interes(self):\n        self.saldo += self.saldo * self.tasa_interes",
-        "es_interactivo": True
-    },
-    3: {
-        "enunciado": "Demuestra el tipado dinámico cambiando temporalmente el atributo 'saldo' de un tipo numérico a una cadena de texto (String) y viceversa.",
-        "codigo_fuente": "self.saldo = 'CUENTA_CONGELADA'\n# Python permite cambiar el tipo de un atributo en caliente",
-        "es_interactivo": True
-    }
-}
+    def contar(self):
+        print(f"🔄 BUCLE WHILE — Números del 1 al {self.limite}")
+        print("--------------------------------------------------")
+        contador = 1
+        while contador <= self.limite:
+            print(f"  {contador}")
+            contador += 1
+        print(f"\n✅ Bucle finalizado. Se ejecutó {self.limite} vez/veces.")
 
-@b02_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
-def gestionar_ejercicio(num_ej):
-    if num_ej not in DATOS_RETOS:
-        num_ej = 1
-        
-    reto = DATOS_RETOS[num_ej]
-    salida_consola = ""
 
-    if request.method == 'POST':
-        import io
-        import contextlib
-        
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    ejecutar_ejercicio1()
-                elif num_ej == 2:
-                    titular_web = request.form.get("titular_input", "Roberto")
-                    saldo_web = float(request.form.get("saldo_input", 1000.0))
-                    ejecutar_ejercicio2(titular_web, saldo_web)
-                elif num_ej == 3:
-                    titular_web = request.form.get("titular_input", "María")
-                    alerta_web = request.form.get("alerta_input", "ALERTA: FONDOS_BLOQUEADOS")
-                    reinicio_web = float(request.form.get("reinicio_input", 250.75))
-                    ejecutar_ejercicio3(titular_web, alerta_web, reinicio_web)
-            except Exception as e:
-                print(f"❌ Error al procesar datos del formulario: {str(e)}")
-        salida_consola = f.getvalue()
+class GestorContadorWhile:
+    @staticmethod
+    def ejecutar_demostracion(limite: int):
+        ContadorWhile(limite).contar()
 
-    salida_consola = f.getvalue()
 
-    return render_template(
-        'ejercicio_detalle.html',
-        bloque_id="bloque02",
-        bloque_titulo="Bloque 02: Variables y Tipos de Datos",
-        ej_actual=num_ej,
-        enunciado=reto["enunciado"],
-        codigo=reto["codigo_fuente"],
-        es_interactivo=reto["es_interactivo"],
-        consola=salida_consola,
-        datos_retos_nav=list(DATOS_RETOS.keys())
-    )
+# ---------------------------------------------------------------------
+# EJERCICIO 2: Recorre lista de frutas con enumerate() → índice y nombre.
+# ---------------------------------------------------------------------
+class RecorredorFrutas:
+    def __init__(self, frutas: list):
+        self.frutas = frutas
+
+    def recorrer_con_enumerate(self):
+        print("🍎 BUCLE FOR CON enumerate()")
+        print("--------------------------------------------------")
+        print(f"Lista: {self.frutas}\n")
+        for indice, fruta in enumerate(self.frutas):
+            print(f"  [{indice}] → {fruta}")
+        print("\n💡 enumerate() devuelve pares (índice, elemento) en cada iteración.")
+
+
+class GestorFrutas:
+    @staticmethod
+    def ejecutar_demostracion(lista_frutas: list):
+        RecorredorFrutas(lista_frutas).recorrer_con_enumerate()
+
+
+# ---------------------------------------------------------------------
+# EJERCICIO 3: Cuadrados de pares del 1 al N con list comprehension.
+# ---------------------------------------------------------------------
+class GeneradorCuadradosPares:
+    def __init__(self, limite: int):
+        self.limite = limite
+
+    def generar(self):
+        print(f"⚡ LIST COMPREHENSION — Cuadrados de pares del 1 al {self.limite}")
+        print("--------------------------------------------------")
+        cuadrados = [x**2 for x in range(1, self.limite + 1) if x % 2 == 0]
+        print(f"  Expresión : [x**2 for x in range(1, {self.limite + 1}) if x % 2 == 0]")
+        print(f"  Resultado : {cuadrados}")
+        print("\n💡 La cláusula 'if' dentro de la comprensión filtra solo los pares.")
+
+
+class GestorCuadradosPares:
+    @staticmethod
+    def ejecutar_demostracion(limite: int):
+        GeneradorCuadradosPares(limite).generar()
+
+
+# =====================================================================
+# FUNCIONES DISPARADORAS
+# =====================================================================
+def ejecutar_ejercicio1(limite):
+    GestorContadorWhile.ejecutar_demostracion(limite)
+
+def ejecutar_ejercicio2(lista_frutas):
+    GestorFrutas.ejecutar_demostracion(lista_frutas)
+
+def ejecutar_ejercicio3(limite):
+    GestorCuadradosPares.ejecutar_demostracion(limite)
