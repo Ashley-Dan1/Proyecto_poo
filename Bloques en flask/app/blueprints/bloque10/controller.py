@@ -7,18 +7,18 @@ b10_bp = Blueprint('bloque10', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
-        "enunciado": "Implementa una función que calcule y retorne el doble de un número provisto por el usuario.",
-        "codigo_fuente": "def doble(x):\n    return x * 2\n\nprint(doble(4))", #[cite: 331]
+        "enunciado": "Crea un diccionario de persona con nombre, edad y ciudad. Accede a sus valores usando [] y también usando get().",
+        "codigo_fuente": "persona = {'nombre': 'Juan', 'edad': 25, 'ciudad': 'Quito'}\nprint(persona['nombre'])              # acceso directo\nprint(persona.get('ciudad'))          # acceso seguro\nprint(persona.get('telefono', 'N/A')) # valor por defecto",
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Desarrolla una función capaz de recibir una cantidad indeterminada de argumentos numéricos usando *args y devuelva su sumatoria.",
-        "codigo_fuente": "def sumar_varios(*numeros):\n    return sum(numeros)\n\nprint(sumar_varios(1, 2, 3, 4))", #[cite: 329, 330]
+        "enunciado": "Itera sobre los items() del diccionario de persona e imprime cada clave y su valor.",
+        "codigo_fuente": "for clave, valor in persona.items():\n    print(clave, '→', valor)",
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Escribe una función puramente recursiva que calcule el factorial de un número entero 'n' positivo de forma sucesiva.",
-        "codigo_fuente": "def factorial(n):\n    if n == 0: return 1\n    return n * factorial(n - 1)\n\nprint(factorial(5))", #[cite: 330]
+        "enunciado": "Demuestra qué pasa si haces copia=datos y luego copia['b']=2. ¿Cambia el original? Usa .copy() para evitarlo.",
+        "codigo_fuente": "datos = {'a': 1}\ncopia_ref  = datos          # misma referencia\ncopia_real = datos.copy()   # objeto nuevo\n\ncopia_ref['b'] = 2\nprint(datos)      # {'a':1, 'b':2} ← también cambió\nprint(copia_real) # {'a':1}        ← no cambió",
         "es_interactivo": True
     }
 }
@@ -27,35 +27,35 @@ DATOS_RETOS = {
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-        
+
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io
-        import contextlib
-        
+        import io, contextlib
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    num_web = float(request.form.get("numero_input", 5.0))
-                    ejecutar_ejercicio1(num_web)
+                    nombre_web = request.form.get("nombre_input", "Juan")
+                    edad_web   = int(request.form.get("edad_input", 25))
+                    ciudad_web = request.form.get("ciudad_input", "Quito")
+                    ejecutar_ejercicio1(nombre_web, edad_web, ciudad_web)
                 elif num_ej == 2:
-                    valores_crudo = request.form.get("args_input", "10, 20, 30, 40")
-                    lista_valores = [float(v.strip()) for v in valores_crudo.split(",") if v.strip()]
-                    ejecutar_ejercicio2(lista_valores)
+                    nombre_web = request.form.get("nombre_input", "Juan")
+                    edad_web   = int(request.form.get("edad_input", 25))
+                    ciudad_web = request.form.get("ciudad_input", "Quito")
+                    ejecutar_ejercicio2(nombre_web, edad_web, ciudad_web)
                 elif num_ej == 3:
-                    fact_web = int(request.form.get("factorial_input", 5))
-                    ejecutar_ejercicio3(fact_web)
+                    ejecutar_ejercicio3()
             except Exception as e:
-                print(f"❌ Error al procesar subrutinas y funciones: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
         'ejercicio_detalle.html',
         bloque_id="bloque10",
-        bloque_titulo="Bloque 10: Funciones",
+        bloque_titulo="Bloque 10: Diccionarios",
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
