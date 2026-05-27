@@ -1,82 +1,63 @@
-# =====================================================================
-# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 6: BUCLES (for / while)
-# =====================================================================
+from flask import Blueprint, render_template, request
+from app.blueprints.bloque02.models import (
+    ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
+)
 
-# ---------------------------------------------------------------------
-# EJERCICIO 1: Imprime los números del 1 al 10 con while.
-# ---------------------------------------------------------------------
-class ContadorWhile:
-    def __init__(self, limite: int):
-        self.limite = limite
+b02_bp = Blueprint('bloque02', __name__, template_folder='../../templates')
 
-    def contar(self):
-        print(f"🔄 BUCLE WHILE — Números del 1 al {self.limite}")
-        print("--------------------------------------------------")
-        contador = 1
-        while contador <= self.limite:
-            print(f"  {contador}")
-            contador += 1
-        print(f"\n✅ Bucle finalizado. Se ejecutó {self.limite} vez/veces.")
+DATOS_RETOS = {
+    1: {
+        "enunciado": "Declara una variable de cada tipo simple (int, float, str, bool, None) y cada tipo complejo (list, tuple, dict, set) e imprímelas todas.",
+        "codigo_fuente": "entero: int = 19\nflotante: float = 3.14\ncadena: str = 'Hello World'\nbooleano: bool = True\nnulo = None\nlista = [1, 2, 3, 'python']\ntupla = (1, 'hello', 3.14)\ndiccionario = {'nombre': 'Juan', 'edad': 25}\nconjunto = {1, 2, 3, 4, 5}",
+        "es_interactivo": False
+    },
+    2: {
+        "enunciado": "Crea una lista con 5 elementos. Imprime el primero, el último y lista[1:4].",
+        "codigo_fuente": "lista = [10, 20, 30, 40, 50]\nprint(lista[0])    # primero\nprint(lista[-1])   # último\nprint(lista[1:4])  # [20, 30, 40]",
+        "es_interactivo": True
+    },
+    3: {
+        "enunciado": "Crea una clase con un método que declare un str, una list y un dict. Imprime: primer carácter del texto, último elemento de la lista y el valor de una clave del dict.",
+        "codigo_fuente": "class DemoTipos:\n    def mostrar(self):\n        texto = 'Python'\n        lista = [10, 20, 30]\n        datos = {'curso': 'POO'}\n        print(texto[0])       # P\n        print(lista[-1])      # 30\n        print(datos['curso']) # POO",
+        "es_interactivo": False
+    }
+}
 
+@b02_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
+def gestionar_ejercicio(num_ej):
+    if num_ej not in DATOS_RETOS:
+        num_ej = 1
 
-class GestorContadorWhile:
-    @staticmethod
-    def ejecutar_demostracion(limite: int):
-        ContadorWhile(limite).contar()
+    reto = DATOS_RETOS[num_ej]
+    salida_consola = ""
 
+    if request.method == 'POST':
+        import io
+        import contextlib
 
-# ---------------------------------------------------------------------
-# EJERCICIO 2: Recorre lista de frutas con enumerate() → índice y nombre.
-# ---------------------------------------------------------------------
-class RecorredorFrutas:
-    def __init__(self, frutas: list):
-        self.frutas = frutas
+        f = io.StringIO()
+        with contextlib.redirect_stdout(f):
+            try:
+                if num_ej == 1:
+                    ejecutar_ejercicio1()
+                elif num_ej == 2:
+                    elementos_web = request.form.get("elementos_input", "10, 20, 30, 40, 50")
+                    lista = [x.strip() for x in elementos_web.split(",") if x.strip()]
+                    ejecutar_ejercicio2(lista)
+                elif num_ej == 3:
+                    ejecutar_ejercicio3()
+            except Exception as e:
+                print(f"❌ Error: {str(e)}")
+        salida_consola = f.getvalue()
 
-    def recorrer_con_enumerate(self):
-        print("🍎 BUCLE FOR CON enumerate()")
-        print("--------------------------------------------------")
-        print(f"Lista: {self.frutas}\n")
-        for indice, fruta in enumerate(self.frutas):
-            print(f"  [{indice}] → {fruta}")
-        print("\n💡 enumerate() devuelve pares (índice, elemento) en cada iteración.")
-
-
-class GestorFrutas:
-    @staticmethod
-    def ejecutar_demostracion(lista_frutas: list):
-        RecorredorFrutas(lista_frutas).recorrer_con_enumerate()
-
-
-# ---------------------------------------------------------------------
-# EJERCICIO 3: Cuadrados de pares del 1 al N con list comprehension.
-# ---------------------------------------------------------------------
-class GeneradorCuadradosPares:
-    def __init__(self, limite: int):
-        self.limite = limite
-
-    def generar(self):
-        print(f"⚡ LIST COMPREHENSION — Cuadrados de pares del 1 al {self.limite}")
-        print("--------------------------------------------------")
-        cuadrados = [x**2 for x in range(1, self.limite + 1) if x % 2 == 0]
-        print(f"  Expresión : [x**2 for x in range(1, {self.limite + 1}) if x % 2 == 0]")
-        print(f"  Resultado : {cuadrados}")
-        print("\n💡 La cláusula 'if' dentro de la comprensión filtra solo los pares.")
-
-
-class GestorCuadradosPares:
-    @staticmethod
-    def ejecutar_demostracion(limite: int):
-        GeneradorCuadradosPares(limite).generar()
-
-
-# =====================================================================
-# FUNCIONES DISPARADORAS
-# =====================================================================
-def ejecutar_ejercicio1(limite):
-    GestorContadorWhile.ejecutar_demostracion(limite)
-
-def ejecutar_ejercicio2(lista_frutas):
-    GestorFrutas.ejecutar_demostracion(lista_frutas)
-
-def ejecutar_ejercicio3(limite):
-    GestorCuadradosPares.ejecutar_demostracion(limite)
+    return render_template(
+        'ejercicio_detalle.html',
+        bloque_id="bloque02",
+        bloque_titulo="Bloque 02: Variables y Tipos de Datos",
+        ej_actual=num_ej,
+        enunciado=reto["enunciado"],
+        codigo=reto["codigo_fuente"],
+        es_interactivo=reto["es_interactivo"],
+        consola=salida_consola,
+        datos_retos_nav=list(DATOS_RETOS.keys())
+    )
