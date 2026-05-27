@@ -17,7 +17,7 @@ DATOS_RETOS = {
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Crea una lista con los cuadrados de los números pares del 1 al 10 usando list comprehension.",
+        "enunciado": "Crea una lista con los cuadrados de los números pares del 1 al 10 usando list comprehension. Resultado esperado: [4, 16, 36, 64, 100]",
         "codigo_fuente": "cuadrados_pares = [x**2 for x in range(1, 11) if x % 2 == 0]\nprint(cuadrados_pares)  # [4, 16, 36, 64, 100]",
         "es_interactivo": True
     }
@@ -41,7 +41,7 @@ def gestionar_ejercicio(num_ej):
                     ejecutar_ejercicio1(limite_web)
                 elif num_ej == 2:
                     frutas_crudas = request.form.get("frutas_input", "manzana, pera, uva")
-                    lista_frutas = [f.strip() for f in frutas_crudas.split(",") if f.strip()]
+                    lista_frutas = [x.strip() for x in frutas_crudas.split(",") if x.strip()]
                     ejecutar_ejercicio2(lista_frutas)
                 elif num_ej == 3:
                     limite_web = int(request.form.get("limite_input", 10))
