@@ -7,18 +7,18 @@ b07_bp = Blueprint('bloque07', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
-        "enunciado": "Crea una lista con 5 frutas. Escribe un programa que acceda e imprima la primera y la última fruta de forma dinámica.",
-        "codigo_fuente": "frutas = ['Manzana', 'Plátano', 'Pera', 'Naranja', 'Uva']\nprint(frutas[0])\nprint(frutas[-1])",
+        "enunciado": "Crea una función que calcule y retorne el doble de un número.",
+        "codigo_fuente": "def doble(x):\n    return x * 2\n\nprint(doble(4))  # 8",
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Modifica el tercer elemento de tu lista de frutas por otra diferente y añade una fruta nueva al final de la colección utilizando métodos de lista.",
-        "codigo_fuente": "frutas[2] = 'Mango'\nfrutas.append('Sandía')",
+        "enunciado": "Crea una función que sume todos los elementos pasados como argumentos usando *args.",
+        "codigo_fuente": "def sumar_varios(*numeros):\n    return sum(numeros)\n\nprint(sumar_varios(1, 2, 3, 4))  # 10",
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Elimina una fruta de la lista buscando por su nombre específico y luego extrae el último elemento de la lista restante usando el método .pop().",
-        "codigo_fuente": "frutas.remove('Plátano')\nfrutas.pop()",
+        "enunciado": "Escribe una función recursiva para calcular el factorial de n. Ejemplo: factorial(5) = 120.",
+        "codigo_fuente": "def factorial(n):\n    if n == 0: return 1        # caso base\n    return n * factorial(n - 1) # llamada recursiva\n\nprint(factorial(5))  # 120",
         "es_interactivo": True
     }
 }
@@ -27,44 +27,33 @@ DATOS_RETOS = {
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-        
+
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
-    # Lista base por defecto para el ejercicio
-    lista_defecto = ["Manzana", "Plátano", "Pera", "Naranja", "Uva"]
-
     if request.method == 'POST':
-        import io
-        import contextlib
-        
+        import io, contextlib
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
-                # Recogemos los valores de las frutas enviados por el usuario desde la web
-                frutas_crudo = request.form.get("lista_frutas", "Manzana,Plátano,Pera,Naranja,Uva")
-                lista_usuario = [fruta.strip() for fruta in frutas_crudo.split(",") if fruta.strip()]
-                
-                if not lista_usuario:
-                    lista_usuario = lista_defecto
-
                 if num_ej == 1:
-                    ejecutar_ejercicio1(lista_usuario)
+                    num_web = float(request.form.get("numero_input", 4))
+                    ejecutar_ejercicio1(num_web)
                 elif num_ej == 2:
-                    reemplazo_web = request.form.get("reemplazo_input", "Mango")
-                    adicional_web = request.form.get("adicional_input", "Sandía")
-                    ejecutar_ejercicio2(lista_usuario, reemplazo_web, adicional_web)
+                    args_crudos = request.form.get("args_input", "1, 2, 3, 4")
+                    lista = [float(x.strip()) for x in args_crudos.split(",") if x.strip()]
+                    ejecutar_ejercicio2(lista)
                 elif num_ej == 3:
-                    eliminar_web = request.form.get("eliminar_input", "Plátano")
-                    ejecutar_ejercicio3(lista_usuario, eliminar_web)
+                    n_web = int(request.form.get("factorial_input", 5))
+                    ejecutar_ejercicio3(n_web)
             except Exception as e:
-                print(f"❌ Error al manipular colecciones en el servidor: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
         'ejercicio_detalle.html',
         bloque_id="bloque07",
-        bloque_titulo="Bloque 07: Listas",
+        bloque_titulo="Bloque 07: Funciones",
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
