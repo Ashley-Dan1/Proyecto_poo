@@ -106,506 +106,9 @@
                         <h6 class="fw-bold text-uppercase text-muted small mb-3">
                             <i class="bi bi-sliders text-success me-1"></i>Parámetros Interactivos
                         </h6>
-                        <form method="POST">
+                        <form method="POST" novalidate onsubmit="return validarFormulario(this)">
 
-                            {# ---- BLOQUE 01 ---- #}
-                            {% if bloque_id == 'bloque01' or bloque_id == 'bloque1' %}
-                                {% if ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Precio del producto</label>
-                                        <input type="number" step="0.01" class="form-control" name="precio_input" value="900" placeholder="Ej: -50 para ver la validación">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Nombre del estudiante</label>
-                                        <input type="text" class="form-control" name="nombre_input" value="Alejandro">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">¿Incluir notas iniciales?</label>
-                                        <select class="form-select" name="modo_notas">
-                                            <option value="sin_notas">Sin notas (None → lista vacía)</option>
-                                            <option value="con_notas">Con notas de ejemplo</option>
-                                        </select>
-                                    </div>
-                                {% elif ej_actual == 4 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Nombre para el diccionario</label>
-                                        <input type="text" class="form-control" name="nombre_dict_input" value="Gabriela">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 02 ---- #}
-                            {% elif bloque_id == 'bloque02' or bloque_id == 'bloque2' %}
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Titular</label>
-                                    <input type="text" class="form-control" name="titular_input" value="Roberto">
-                                </div>
-                                {% if ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Saldo inicial</label>
-                                        <input type="number" step="0.01" class="form-control" name="saldo_input" value="1000">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Mensaje de alerta</label>
-                                        <input type="text" class="form-control" name="alerta_input" value="ALERTA: FONDOS_BLOQUEADOS">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Saldo de reinicio</label>
-                                        <input type="number" step="0.01" class="form-control" name="reinicio_input" value="250.75">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 03 ---- #}
-                            {% elif bloque_id == 'bloque03' or bloque_id == 'bloque3' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Valor A</label>
-                                            <input type="number" step="any" class="form-control" name="valor_a_input" value="20">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Valor B</label>
-                                            <input type="number" step="any" class="form-control" name="valor_b_input" value="4">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Elemento 1</label>
-                                            <input type="text" class="form-control" name="item1_input" value="Objeto1">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Elemento 2</label>
-                                            <input type="text" class="form-control" name="item2_input" value="Objeto2">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 04 ---- #}
-                            {% elif bloque_id == 'bloque04' or bloque_id == 'bloque4' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Nombre</label>
-                                            <input type="text" class="form-control" name="nombre_input" value="Ana">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Edad</label>
-                                            <input type="number" class="form-control" name="edad_input" value="25">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Número 1</label>
-                                            <input type="number" step="any" class="form-control" name="num1_input" value="10">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Número 2</label>
-                                            <input type="number" step="any" class="form-control" name="num2_input" value="20">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Entrada sin casting (string)</label>
-                                        <input type="text" class="form-control" name="entrada_cruda_input" value="10">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 05 ---- #}
-                            {% elif bloque_id == 'bloque05' or bloque_id == 'bloque5' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Edad</label>
-                                        <input type="number" class="form-control" name="edad_input" value="18">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Calificación (0-100)</label>
-                                        <input type="number" step="0.1" class="form-control" name="nota_input" value="85">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Usuario</label>
-                                            <input type="text" class="form-control" name="usuario_input" placeholder="admin">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Contraseña</label>
-                                            <input type="text" class="form-control" name="clave_input" placeholder="1234">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 06 ---- #}
-                            {% elif bloque_id == 'bloque06' or bloque_id == 'bloque6' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Límite del conteo</label>
-                                        <input type="number" class="form-control" name="limite_input" value="10">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Inicio de la cuenta regresiva</label>
-                                        <input type="number" class="form-control" name="inicio_input" value="10">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Rango máximo para suma de pares</label>
-                                        <input type="number" class="form-control" name="limite_pares_input" value="50">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 07 ---- #}
-                            {% elif bloque_id == 'bloque07' or bloque_id == 'bloque7' %}
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Lista de frutas (separadas por coma)</label>
-                                    <input type="text" class="form-control" name="lista_frutas" value="Manzana,Plátano,Pera,Naranja,Uva">
-                                </div>
-                                {% if ej_actual == 2 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Reemplazar índice 2 con</label>
-                                            <input type="text" class="form-control" name="reemplazo_input" value="Mango">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Fruta a añadir al final</label>
-                                            <input type="text" class="form-control" name="adicional_input" value="Sandía">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Fruta a eliminar (.remove)</label>
-                                        <input type="text" class="form-control" name="eliminar_input" value="Plátano">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 08 ---- #}
-                            {% elif bloque_id == 'bloque08' or bloque_id == 'bloque8' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Valor que intentará mutar la tupla</label>
-                                        <input type="text" class="form-control" name="intento_usuario" value="Prueba">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Elementos base (separados por coma)</label>
-                                        <input type="text" class="form-control" name="usuarios_base" value="ana, carlos, juan, ana">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Elemento duplicado a intentar añadir</label>
-                                        <input type="text" class="form-control" name="intento_usuario" value="ana">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 09 ---- #}
-                            {% elif bloque_id == 'bloque09' or bloque_id == 'bloque9' %}
-                                <div class="row g-3">
-                                    <div class="col-sm-4">
-                                        <label class="form-label small fw-bold">Título</label>
-                                        <input type="text" class="form-control" name="titulo_input" value="Cien Años de Soledad">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label class="form-label small fw-bold">Autor</label>
-                                        <input type="text" class="form-control" name="autor_input" value="Gabriel García Márquez">
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <label class="form-label small fw-bold">Año</label>
-                                        <input type="number" class="form-control" name="anio_input" value="1967">
-                                    </div>
-                                </div>
-                                {% if ej_actual == 2 %}
-                                    <div class="row g-3 mt-1">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Nuevo año</label>
-                                            <input type="number" class="form-control" name="nuevo_anio_input" value="2026">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">¿Disponible?</label>
-                                            <select class="form-select" name="disponible_input">
-                                                <option value="true">True</option>
-                                                <option value="false">False</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 10 ---- #}
-                            {% elif bloque_id == 'bloque10' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Número</label>
-                                        <input type="number" step="any" class="form-control" name="numero_input" value="5">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Argumentos numéricos (separados por coma)</label>
-                                        <input type="text" class="form-control" name="args_input" value="10, 20, 30, 40">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Número para factorial</label>
-                                        <input type="number" class="form-control" name="factorial_input" value="5">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 11 ---- #}
-                            {% elif bloque_id == 'bloque11' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Texto a convertir a entero</label>
-                                        <input type="text" class="form-control" name="texto_input" value="abc">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Elementos de la lista (separados por coma)</label>
-                                        <input type="text" class="form-control" name="lista_elementos" value="Manzana, Pera, Uva">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Índice a acceder</label>
-                                        <input type="number" class="form-control" name="indice_input" value="5">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Dividendo</label>
-                                            <input type="text" class="form-control" name="dividendo_input" value="10">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Divisor</label>
-                                            <input type="text" class="form-control" name="divisor_input" value="0">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 12 ---- #}
-                            {% elif bloque_id == 'bloque12' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Texto del decorador</label>
-                                        <input type="text" class="form-control" name="texto_decorador" value="Procesando Datos de Nómina">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Número (positivo o negativo para ver la validación)</label>
-                                        <input type="number" step="any" class="form-control" name="numero_positivo" value="5">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Valor A</label>
-                                            <input type="number" step="any" class="form-control" name="valor_a" value="2">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Valor B</label>
-                                            <input type="number" step="any" class="form-control" name="valor_b" value="3">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 13 ---- #}
-                            {% elif bloque_id == 'bloque13' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Valores para desempaquetar (mínimo 3, separados por coma)</label>
-                                        <input type="text" class="form-control" name="tupla_input" value="10, 20, 30, 40">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Lista de 3 factores (separados por coma)</label>
-                                        <input type="text" class="form-control" name="lista_input" value="2, 3, 4">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-3">
-                                            <label class="form-label small fw-bold">Llave 1</label>
-                                            <input type="text" class="form-control" name="llave1" value="a">
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="form-label small fw-bold">Valor 1</label>
-                                            <input type="text" class="form-control" name="valor1" value="10">
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="form-label small fw-bold">Llave 2</label>
-                                            <input type="text" class="form-control" name="llave2" value="b">
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <label class="form-label small fw-bold">Valor 2</label>
-                                            <input type="text" class="form-control" name="valor2" value="20">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 14 ---- #}
-                            {% elif bloque_id == 'bloque14' %}
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Lista de números (separados por coma)</label>
-                                    <input type="text" class="form-control" name="lista_numeros_input" value="1, 2, 3, 4, 5">
-                                </div>
-                                {% if ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Umbral de filtrado</label>
-                                        <input type="number" step="any" class="form-control" name="umbral_input" value="10">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 15 ---- #}
-                            {% elif bloque_id == 'bloque15' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Límite del rango</label>
-                                        <input type="number" class="form-control" name="limite_input" value="5">
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Lista de números (separados por coma)</label>
-                                        <input type="text" class="form-control" name="lista_numeros_input" value="1, 2, 3, 4, 5, 6, 7, 8, 9, 10">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Lista de palabras (separadas por coma)</label>
-                                        <input type="text" class="form-control" name="lista_palabras_input" value="hola, mundo, programación, objetos">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 16 ---- #}
-                            {% elif bloque_id == 'bloque16' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Texto a escribir en el archivo</label>
-                                        <input type="text" class="form-control" name="texto_input" value="Hola Mundo de persistencia">
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="mb-3">
-                                        <label class="form-label small fw-bold">Línea a añadir al archivo</label>
-                                        <input type="text" class="form-control" name="texto_anexo_input" value="Esta es una línea añadida posteriormente.">
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 17 ---- #}
-                            {% elif bloque_id == 'bloque17' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Nombre</label>
-                                            <input type="text" class="form-control" name="nombre_input" value="Carlos">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Edad</label>
-                                            <input type="number" class="form-control" name="edad_input" value="30">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-4">
-                                            <label class="form-label small fw-bold">Nombre</label>
-                                            <input type="text" class="form-control" name="nombre_input" value="Elena">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label small fw-bold">Edad inicial</label>
-                                            <input type="number" class="form-control" name="edad_inicial_input" value="25">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label small fw-bold">Edad nueva</label>
-                                            <input type="number" class="form-control" name="edad_nueva_input" value="26">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Ancho</label>
-                                            <input type="number" step="any" class="form-control" name="ancho_input" value="5">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Alto</label>
-                                            <input type="number" step="any" class="form-control" name="alto_input" value="10">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 18 ---- #}
-                            {% elif bloque_id == 'bloque18' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-4">
-                                            <label class="form-label small fw-bold">Nombre</label>
-                                            <input type="text" class="form-control" name="nombre_input" value="Andrés">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label small fw-bold">Edad</label>
-                                            <input type="number" class="form-control" name="edad_input" value="19">
-                                        </div>
-                                        <div class="col-sm-4">
-                                            <label class="form-label small fw-bold">Grado</label>
-                                            <input type="text" class="form-control" name="grado_input" value="Segundo Semestre">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Nombre</label>
-                                            <input type="text" class="form-control" name="nombre_input" value="Beatriz">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Grado</label>
-                                            <input type="text" class="form-control" name="grado_input" value="Sexto de Secundaria">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Nombre del perro</label>
-                                            <input type="text" class="form-control" name="perro_input" value="Fido">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Nombre del gato</label>
-                                            <input type="text" class="form-control" name="gato_input" value="Félix">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 19 ---- #}
-                            {% elif bloque_id == 'bloque19' %}
-                                {% if ej_actual == 1 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Depósito inicial</label>
-                                            <input type="number" step="any" class="form-control" name="deposito_input" value="1000">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Abono</label>
-                                            <input type="number" step="any" class="form-control" name="abono_input" value="500">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 2 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Saldo inicial</label>
-                                            <input type="number" step="any" class="form-control" name="saldo_inicial_input" value="200">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Intento de cambio (negativo para ver validación)</label>
-                                            <input type="number" step="any" class="form-control" name="intento_cambio_input" value="-50">
-                                        </div>
-                                    </div>
-                                {% elif ej_actual == 3 %}
-                                    <div class="row g-3">
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Título del libro</label>
-                                            <input type="text" class="form-control" name="titulo_input" value="El Quijote">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label class="form-label small fw-bold">Autor</label>
-                                            <input type="text" class="form-control" name="autor_input" value="Miguel de Cervantes">
-                                        </div>
-                                    </div>
-                                {% endif %}
-
-                            {# ---- BLOQUE 00 o bloques sin interactividad compleja ---- #}
-                            {% else %}
-                                <p class="text-muted small mb-3">Este ejercicio no requiere parámetros adicionales.</p>
-                            {% endif %}
+                            {% include 'formularios.html' %}
 
                             <div class="mt-3">
                                 <button type="submit" class="btn btn-success px-4 fw-bold">
@@ -632,4 +135,66 @@
                 {% endif %}
 
             </div></div></div></div>
+
+<script>
+// Bloquear caracteres inválidos en tiempo real según el tipo de campo
+document.addEventListener('DOMContentLoaded', function () {
+
+    // Campos de texto: solo letras, espacios y acentos
+    document.querySelectorAll('input[data-tipo="texto"]').forEach(function(input) {
+        input.addEventListener('keypress', function(e) {
+            // Permitir teclas de control (backspace, delete, flechas, etc.)
+            if (e.key.length > 1) return;
+            const permitido = /[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s,.:_\-!@#$%]/;
+            if (!permitido.test(e.key)) {
+                e.preventDefault();
+                mostrarAviso(input, 'Solo se permiten letras y caracteres básicos.');
+            }
+        });
+    });
+
+    // Campos numéricos tipo text (listas de números separadas por coma)
+    document.querySelectorAll('input[data-tipo="lista-numeros"]').forEach(function(input) {
+        input.addEventListener('keypress', function(e) {
+            if (e.key.length > 1) return;
+            const permitido = /[\d,\s\.\-\|]/;
+            if (!permitido.test(e.key)) {
+                e.preventDefault();
+                mostrarAviso(input, 'Solo se permiten números separados por comas.');
+            }
+        });
+    });
+
+    // Mostrar mensaje de aviso debajo del input
+    function mostrarAviso(input, mensaje) {
+        let aviso = input.parentElement.querySelector('.aviso-validacion');
+        if (!aviso) {
+            aviso = document.createElement('div');
+            aviso.className = 'aviso-validacion text-danger small mt-1';
+            input.parentElement.appendChild(aviso);
+        }
+        aviso.textContent = '⚠ ' + mensaje;
+        clearTimeout(input._avisoTimeout);
+        input._avisoTimeout = setTimeout(function() {
+            aviso.textContent = '';
+        }, 2500);
+    }
+});
+
+// Validación antes de enviar el formulario
+function validarFormulario(form) {
+    let valido = true;
+    form.querySelectorAll('input[pattern]').forEach(function(input) {
+        const regex = new RegExp('^' + input.getAttribute('pattern') + '$');
+        if (input.value.trim() !== '' && !regex.test(input.value)) {
+            input.classList.add('is-invalid');
+            valido = false;
+        } else {
+            input.classList.remove('is-invalid');
+        }
+    });
+    return valido;
+}
+</script>
+
 {% endblock %}
