@@ -1,99 +1,105 @@
 # =====================================================================
-# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 10: FUNCIONES
+# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 10: DICCIONARIOS
 # =====================================================================
 
 # ---------------------------------------------------------------------
-# EJERCICIO 1: Función que calcule el doble de un número.
+# EJERCICIO 1: Crear dict de persona y acceder con [] y get().
 # ---------------------------------------------------------------------
-class OperadorMatematico:
-    def __init__(self, valor_base: float):
-        self.valor = valor_base
+class InspectorDiccionario:
+    def __init__(self, nombre: str, edad: int, ciudad: str):
+        self.persona = {
+            "nombre": nombre,
+            "edad":   edad,
+            "ciudad": ciudad
+        }
 
-    def calcular_doble(self):
-        print("🔢 CÁLCULO DE VALOR DUPLICADO")
+    def mostrar_accesos(self):
+        print("📖 DICCIONARIOS — Acceso con [] y get()")
         print("--------------------------------------------------")
-        # Implementación de la lógica básica solicitada
-        resultado = self.valor * 2  # [cite: 331]
-        print(f"El doble del número {self.valor} es: {resultado}")
-        return resultado
+        print(f"  Diccionario : {self.persona}")
+        print(f"\n  Acceso directo []:")
+        print(f"    persona['nombre'] → {self.persona['nombre']}")
+        print(f"    persona['edad']   → {self.persona['edad']}")
+        print(f"\n  Acceso seguro get():")
+        print(f"    persona.get('ciudad')              → {self.persona.get('ciudad')}")
+        print(f"    persona.get('telefono', 'N/A')     → {self.persona.get('telefono', 'N/A')}")
+        print("\n💡 get() evita KeyError si la clave no existe; devuelve None o el valor por defecto.")
 
 
-class GestorDuplicador:
+class GestorAccesoDiccionario:
     @staticmethod
-    def ejecutar_demostracion(numero: float):
-        operador = OperadorMatematico(numero)
-        operador.calcular_doble()
+    def ejecutar_demostracion(nombre: str, edad: int, ciudad: str):
+        InspectorDiccionario(nombre, edad, ciudad).mostrar_accesos()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 2: Función que sume todos los elementos de una lista con *args.
+# EJERCICIO 2: Iterar sobre items() → clave y valor.
 # ---------------------------------------------------------------------
-class AgregadorDinamico:
+class IteradorDiccionario:
+    def __init__(self, nombre: str, edad: int, ciudad: str):
+        self.persona = {
+            "nombre": nombre,
+            "edad":   edad,
+            "ciudad": ciudad
+        }
+
+    def iterar(self):
+        print("🔄 DICCIONARIOS — Iteración con items()")
+        print("--------------------------------------------------")
+        print(f"  Diccionario : {self.persona}\n")
+        for clave, valor in self.persona.items():
+            print(f"    {clave:10} → {valor}")
+        print("\n💡 .items() retorna pares (clave, valor) como una vista iterable.")
+
+
+class GestorIteracionDiccionario:
+    @staticmethod
+    def ejecutar_demostracion(nombre: str, edad: int, ciudad: str):
+        IteradorDiccionario(nombre, edad, ciudad).iterar()
+
+
+# ---------------------------------------------------------------------
+# EJERCICIO 3: Referencia vs copia con .copy().
+# ---------------------------------------------------------------------
+class DemostradorCopiaDict:
     def __init__(self):
-        # El constructor inicializa la estructura sin necesidad de estados rígidos
-        pass
+        self.datos_originales = {"a": 1}
 
-    def sumar_elementos(self, *numeros: float):  # [cite: 329]
-        print("🧮 SUMATORIA DINÁMICA UTILIZANDO *ARGS")
+    def demostrar(self):
+        print("🔍 DICCIONARIOS — referencia vs copia (.copy())")
         print("--------------------------------------------------")
-        print(f"Argumentos posicionales recibidos (*args): {numeros}")
-        
-        # Se procesa la tupla dinámica generada por el empaquetamiento *args
-        total_acumulado = sum(numeros)  # [cite: 329]
-        
-        print(f"➡️ Resultado final de la suma: {total_acumulado}")
-        return total_acumulado
+        datos      = dict(self.datos_originales)
+        copia_ref  = datos
+        copia_real = datos.copy()
+
+        print(f"  datos      = {datos}")
+        print(f"  copia_ref  = datos        → misma referencia en memoria")
+        print(f"  copia_real = datos.copy() → objeto nuevo independiente\n")
+
+        copia_ref["b"] = 2
+        print(f"  Después de copia_ref['b'] = 2 :")
+        print(f"    datos      : {datos}      ← también cambió")
+        print(f"    copia_real : {copia_real}  ← no cambió")
+        print("\n💡 Usa .copy() cuando necesites un diccionario independiente.")
 
 
-class GestorSumadorArgs:
+class GestorCopiaDict:
     @staticmethod
-    def ejecutar_calculo(lista_numeros: list):
-        agregador = AgregadorDinamico()
-        # Se desempaqueta la lista usando '*' para pasar los valores como *args al método
-        agregador.sumar_elementos(*lista_numeros)
-
-
-# ---------------------------------------------------------------------
-# EJERCICIO 3: Función recursiva para calcular el factorial de n.
-# ---------------------------------------------------------------------
-class CalculadorRecursivo:
-    def __init__(self, numero_limite: int):
-        self.limite = numero_limite
-
-    def obtener_factorial(self, n: int) -> int:
-        # Caso base obligatorio de la recursividad [cite: 330]
-        if n == 0:
-            return 1  # [cite: 330]
-        # Llamada recursiva disminuyendo el estado [cite: 330]
-        return n * self.obtener_factorial(n - 1)  # [cite: 330]
-
-    def mostrar_resultado(self):
-        print("🧬 CÁLCULO DE FACTORIAL MEDIANTE RECURSIVIDAD")
-        print("--------------------------------------------------")
-        if self.limite < 0:
-            print("❌ Error: No se puede calcular el factorial de un número negativo.")
-            return
-            
-        resultado_final = self.obtener_factorial(self.limite) #[cite: 332]
-        print(f"➡️ El factorial de {self.limite}! es igual a: {resultado_final}")
-
-
-class GestorFactorial:
-    @staticmethod
-    def ejecutar_analisis(numero_entero: int):
-        calculador = CalculadorRecursivo(numero_entero)
-        calculador.mostrar_resultado()
+    def ejecutar_demostracion():
+        DemostradorCopiaDict().demostrar()
 
 
 # =====================================================================
-# FUNCIONES DISPARADORAS (Conectan con el controlador de Flask)
+# FUNCIONES DISPARADORAS
 # =====================================================================
+def ejecutar_ejercicio1(nombre, edad, ciudad):
+    GestorAccesoDiccionario.ejecutar_demostracion(nombre, edad, ciudad)
 
-def ejecutar_ejercicio1(numero):
-    GestorDuplicador.ejecutar_demostracion(numero)
+def ejecutar_ejercicio2(nombre, edad, ciudad):
+    GestorIteracionDiccionario.ejecutar_demostracion(nombre, edad, ciudad)
 
-def ejecutar_ejercicio2(lista_valores):
-    GestorSumadorArgs.ejecutar_calculo(lista_valores)
+def ejecutar_ejercicio3():
+    GestorCopiaDict.ejecutar_demostracion()
 
 def ejecutar_ejercicio3(numero_factorial):
     GestorFactorial.ejecutar_analisis(numero_factorial)
