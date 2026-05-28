@@ -3,6 +3,7 @@ from app.blueprints.bloque13.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b13_bp = Blueprint('bloque13', __name__, template_folder='../../templates')
 
@@ -18,7 +19,7 @@ DATOS_RETOS = {
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Analiza: @log aplicado a suma(a, b). ¿Qué imprime suma(2, 3)? El decorador @log debe imprimir 'Llamando función...' y el retorno.",
+        "enunciado": "Analiza: @log aplicado a suma(a, b). El decorador imprime 'Llamando función...' y el retorno. Prueba con los valores que quieras.",
         "codigo_fuente": "def log(f):\n    def wrapper(*args, **kwargs):\n        print(f'Llamando función {f.__name__} con args={args}')\n        resultado = f(*args, **kwargs)\n        print(f'Retorno: {resultado}')\n        return resultado\n    return wrapper\n\n@log\ndef suma(a, b):\n    return a + b\n\nsuma(2, 3)",
         "es_interactivo": True
     }
@@ -42,43 +43,31 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    # CORREGIDO: sin default silencioso, valida campo vacío
-                    nombre_web = request.form.get("nombre_funcion_input", "").strip()
-                    if nombre_web == "":
-                        print("⚠️ Debes ingresar el nombre de la función.")
-                    else:
-                        ejecutar_ejercicio1(nombre_web)
+        if num_ej == 1:
+            nombre = request.form.get("nombre_funcion_input", "").strip()
+            if campos_vacios(nombre):
+                salida_consola = "⚠️ Debes ingresar el nombre de la función."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, nombre)
 
-                elif num_ej == 2:
-                    # CORREGIDO: sin default silencioso
-                    numero_str = request.form.get("numero_input", "").strip()
-                    if numero_str == "":
-                        print("⚠️ Debes ingresar un número.")
-                    else:
-                        ejecutar_ejercicio2(float(numero_str))
+        elif num_ej == 2:
+            numero_str = request.form.get("numero_input", "").strip()
+            if campos_vacios(numero_str):
+                salida_consola = "⚠️ Debes ingresar un número."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, float(numero_str))
 
-                elif num_ej == 3:
-                    # CORREGIDO: sin defaults silenciosos
-                    a_str = request.form.get("valor_a_input", "").strip()
-                    b_str = request.form.get("valor_b_input", "").strip()
-                    if a_str == "" or b_str == "":
-                        print("⚠️ Debes ingresar ambos valores (A y B).")
-                    else:
-                        ejecutar_ejercicio3(float(a_str), float(b_str))
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            a_str = request.form.get("valor_a_input", "").strip()
+            b_str = request.form.get("valor_b_input", "").strip()
+            if campos_vacios(a_str, b_str):
+                salida_consola = "⚠️ Debes ingresar ambos valores (A y B)."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, float(a_str), float(b_str))
 
     return render_template(
         'ejercicio_detalle.html',
