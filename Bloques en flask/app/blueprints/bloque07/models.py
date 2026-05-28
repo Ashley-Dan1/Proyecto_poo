@@ -2,9 +2,6 @@
 # CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 7: FUNCIONES
 # =====================================================================
 
-# ---------------------------------------------------------------------
-# EJERCICIO 1: Función que calcule el doble de un número.
-# ---------------------------------------------------------------------
 class CalculadorDoble:
     def __init__(self, valor: float):
         self.valor = valor
@@ -23,9 +20,6 @@ class GestorDoble:
         CalculadorDoble(numero).calcular()
 
 
-# ---------------------------------------------------------------------
-# EJERCICIO 2: Función que sume con *args.
-# ---------------------------------------------------------------------
 class SumadorArgs:
     def __init__(self, numeros: list):
         self.numeros = numeros
@@ -46,17 +40,14 @@ class GestorSumadorArgs:
         SumadorArgs(lista).sumar()
 
 
-# ---------------------------------------------------------------------
-# EJERCICIO 3: Factorial recursivo.
-# ---------------------------------------------------------------------
 class CalculadorFactorial:
     def __init__(self, n: int):
         self.n = n
 
     def factorial(self, n: int) -> int:
         if n == 0:
-            return 1                    # caso base
-        return n * self.factorial(n - 1)  # llamada recursiva
+            return 1
+        return n * self.factorial(n - 1)
 
     def mostrar(self):
         print("🧬 RECURSIVIDAD — factorial(n)")
@@ -65,7 +56,6 @@ class CalculadorFactorial:
             print("❌ El factorial no está definido para números negativos.")
             return
         resultado = self.factorial(self.n)
-        # Traza visual del proceso
         pasos = " × ".join(str(i) for i in range(self.n, 0, -1)) + " × 1"
         print(f"  factorial({self.n}) = {pasos}")
         print(f"\n  Resultado : {resultado}")
@@ -89,6 +79,3 @@ def ejecutar_ejercicio2(lista):
 
 def ejecutar_ejercicio3(n):
     GestorFactorial.ejecutar_demostracion(n)
-
-def ejecutar_ejercicio3(lista, fruta_eliminar):
-    GestorDepuracion.ejecutar_analisis(lista, fruta_eliminar)
