@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque07.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b07_bp = Blueprint('bloque07', __name__, template_folder='../../templates')
 
@@ -24,18 +24,19 @@ DATOS_RETOS = {
     }
 }
 
+
 @b07_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque07", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque07",
         bloque_titulo=info.get("titulo", "Bloque 07"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b07_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -51,15 +52,34 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    num_web = float(request.form.get("numero_input", 4))
-                    ejecutar_ejercicio1(num_web)
+                    num_str = request.form.get("numero_input", "").strip()
+                    if num_str == "":
+                        print("⚠️ Debes ingresar un número.")
+                    else:
+                        ejecutar_ejercicio1(float(num_str))
+
                 elif num_ej == 2:
-                    args_crudos = request.form.get("args_input", "1, 2, 3, 4")
-                    lista = [float(x.strip()) for x in args_crudos.split(",") if x.strip()]
-                    ejecutar_ejercicio2(lista)
+                    args_crudos = request.form.get("args_input", "").strip()
+                    if args_crudos == "":
+                        print("⚠️ Debes ingresar al menos un número.")
+                    else:
+                        lista = [float(x.strip()) for x in args_crudos.split(",") if x.strip()]
+                        ejecutar_ejercicio2(lista)
+
                 elif num_ej == 3:
-                    n_web = int(request.form.get("factorial_input", 5))
-                    ejecutar_ejercicio3(n_web)
+                    n_str = request.form.get("factorial_input", "").strip()
+                    if n_str == "":
+                        print("⚠️ Debes ingresar un número entre 0 y 12.")
+                    else:
+                        n_web = int(n_str)
+                        # Validación server-side: limitar recursión profunda
+                        if n_web < 0:
+                            print("⚠️ El factorial no está definido para números negativos.")
+                        elif n_web > 12:
+                            print("⚠️ Por seguridad, el límite máximo es 12.")
+                        else:
+                            ejecutar_ejercicio3(n_web)
+
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
