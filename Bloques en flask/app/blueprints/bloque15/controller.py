@@ -3,6 +3,7 @@ from app.blueprints.bloque15.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b15_bp = Blueprint('bloque15', __name__, template_folder='../../templates')
 
@@ -42,37 +43,27 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                # CORREGIDO: sin default silencioso en lista_numeros_input
-                entrada = request.form.get("lista_numeros_input", "").strip()
-                if entrada == "":
-                    print("⚠️ Debes ingresar una lista de números separados por coma.")
+        entrada = request.form.get("lista_numeros_input", "").strip()
+        if campos_vacios(entrada):
+            salida_consola = "⚠️ Debes ingresar una lista de números separados por coma."
+        else:
+            lista = [float(x.strip()) for x in entrada.split(",") if x.strip()]
+            if not lista:
+                salida_consola = "⚠️ No se detectaron números válidos en la lista."
+            elif num_ej == 1:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, lista)
+            elif num_ej == 2:
+                umbral_str = request.form.get("umbral_input", "").strip()
+                if campos_vacios(umbral_str):
+                    salida_consola = "⚠️ Debes ingresar el umbral de filtrado."
                 else:
-                    lista = [float(x.strip()) for x in entrada.split(",") if x.strip()]
-                    if not lista:
-                        print("⚠️ No se detectaron números válidos en la lista.")
-                    elif num_ej == 1:
-                        ejecutar_ejercicio1(lista)
-                    elif num_ej == 2:
-                        umbral_str = request.form.get("umbral_input", "").strip()
-                        if umbral_str == "":
-                            print("⚠️ Debes ingresar el umbral de filtrado.")
-                        else:
-                            ejecutar_ejercicio2(lista, float(umbral_str))
-                    elif num_ej == 3:
-                        ejecutar_ejercicio3(lista)
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+                    salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, lista, float(umbral_str))
+            elif num_ej == 3:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, lista)
 
     return render_template(
         'ejercicio_detalle.html',
