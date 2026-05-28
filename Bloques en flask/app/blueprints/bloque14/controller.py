@@ -24,6 +24,7 @@ DATOS_RETOS = {
     }
 }
 
+
 @b14_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque14", {})
@@ -35,6 +36,7 @@ def ver_concepto():
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
+
 
 @b14_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -50,21 +52,39 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    datos_crudos = request.form.get("tupla_input", "10, 20, 30, 40")
-                    tupla_valores = tuple(float(x.strip()) for x in datos_crudos.split(",") if x.strip())
-                    ejecutar_ejercicio1(tupla_valores)
+                    # CORREGIDO: sin default silencioso
+                    datos_crudos = request.form.get("tupla_input", "").strip()
+                    if datos_crudos == "":
+                        print("⚠️ Debes ingresar los valores para desempaquetar.")
+                    else:
+                        tupla_valores = tuple(float(x.strip()) for x in datos_crudos.split(",") if x.strip())
+                        if len(tupla_valores) < 3:
+                            print("⚠️ Necesitas al menos 3 valores para el unpacking con *mitad.")
+                        else:
+                            ejecutar_ejercicio1(tupla_valores)
+
                 elif num_ej == 2:
-                    lista_cruda = request.form.get("lista_input", "2, 3, 4")
-                    lista_valores = [float(x.strip()) for x in lista_cruda.split(",") if x.strip()][:3]
-                    while len(lista_valores) < 3:
-                        lista_valores.append(1.0)
-                    ejecutar_ejercicio2(lista_valores)
+                    # CORREGIDO: sin default silencioso
+                    lista_cruda = request.form.get("lista_input", "").strip()
+                    if lista_cruda == "":
+                        print("⚠️ Debes ingresar los 3 factores separados por coma.")
+                    else:
+                        lista_valores = [float(x.strip()) for x in lista_cruda.split(",") if x.strip()][:3]
+                        while len(lista_valores) < 3:
+                            lista_valores.append(1.0)
+                        ejecutar_ejercicio2(lista_valores)
+
                 elif num_ej == 3:
-                    llave1 = request.form.get("llave1", "a")
-                    valor1 = request.form.get("valor1", "1")
-                    llave2 = request.form.get("llave2", "b")
-                    valor2 = request.form.get("valor2", "2")
-                    ejecutar_ejercicio3({llave1: valor1}, {llave2: valor2})
+                    # CORREGIDO: sin defaults silenciosos
+                    llave1 = request.form.get("llave1", "").strip()
+                    valor1 = request.form.get("valor1", "").strip()
+                    llave2 = request.form.get("llave2", "").strip()
+                    valor2 = request.form.get("valor2", "").strip()
+                    if llave1 == "" or valor1 == "" or llave2 == "" or valor2 == "":
+                        print("⚠️ Debes completar los cuatro campos (llave1, valor1, llave2, valor2).")
+                    else:
+                        ejecutar_ejercicio3({llave1: valor1}, {llave2: valor2})
+
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
