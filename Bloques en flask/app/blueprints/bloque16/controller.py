@@ -3,6 +3,7 @@ import os
 from app.blueprints.bloque16.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
+from app.contenido import COMPENDIO   # ← import del compendio
 
 b16_bp = Blueprint('bloque16', __name__, template_folder='../../templates')
 
@@ -23,6 +24,19 @@ DATOS_RETOS = {
         "es_interactivo": True
     }
 }
+
+@b16_bp.route('/concepto')
+def ver_concepto():
+    info = COMPENDIO.get("bloque16", {})
+    return render_template(
+        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        bloque_id="bloque16",
+        bloque_titulo=info.get("titulo", "Bloque 16"),
+        concepto_texto=info.get("concepto", ""),
+        ejemplo_codigo=info.get("ejemplo", ""),
+        datos_retos_nav=list(DATOS_RETOS.keys())
+    )
+ 
 
 @b16_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
