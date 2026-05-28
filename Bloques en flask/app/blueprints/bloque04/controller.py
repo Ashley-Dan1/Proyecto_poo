@@ -3,6 +3,7 @@ from app.blueprints.bloque04.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b04_bp = Blueprint('bloque04', __name__, template_folder='../../templates')
 
@@ -42,42 +43,32 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    nombre_web = request.form.get("nombre_input", "").strip()
-                    edad_str = request.form.get("edad_input", "").strip()
-                    if nombre_web == "" or edad_str == "":
-                        print("⚠️ Debes ingresar nombre y edad.")
-                    else:
-                        ejecutar_ejercicio1(nombre_web, int(edad_str))
+        if num_ej == 1:
+            nombre = request.form.get("nombre_input", "").strip()
+            edad_str = request.form.get("edad_input", "").strip()
+            if campos_vacios(nombre, edad_str):
+                salida_consola = "⚠️ Debes ingresar nombre y edad."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, nombre, int(edad_str))
 
-                elif num_ej == 2:
-                    n1_str = request.form.get("num1_input", "").strip()
-                    n2_str = request.form.get("num2_input", "").strip()
-                    if n1_str == "" or n2_str == "":
-                        print("⚠️ Debes ingresar ambos números.")
-                    else:
-                        ejecutar_ejercicio2(float(n1_str), float(n2_str))
+        elif num_ej == 2:
+            n1_str = request.form.get("num1_input", "").strip()
+            n2_str = request.form.get("num2_input", "").strip()
+            if campos_vacios(n1_str, n2_str):
+                salida_consola = "⚠️ Debes ingresar ambos números."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, float(n1_str), float(n2_str))
 
-                elif num_ej == 3:
-                    # Campo de texto libre — se pasa tal cual como string (sin casting)
-                    entrada_web = request.form.get("entrada_cruda_input", "").strip()
-                    if entrada_web == "":
-                        print("⚠️ Debes ingresar un valor en el campo.")
-                    else:
-                        ejecutar_ejercicio3(entrada_web)
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            entrada = request.form.get("entrada_cruda_input", "").strip()
+            if campos_vacios(entrada):
+                salida_consola = "⚠️ Debes ingresar un valor en el campo."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, entrada)
 
     return render_template(
         'ejercicio_detalle.html',
