@@ -24,6 +24,7 @@ DATOS_RETOS = {
     }
 }
 
+
 @b13_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque13", {})
@@ -35,6 +36,7 @@ def ver_concepto():
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
+
 
 @b13_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -50,15 +52,30 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    nombre_web = request.form.get("nombre_funcion_input", "procesar_datos")
-                    ejecutar_ejercicio1(nombre_web)
+                    # CORREGIDO: sin default silencioso, valida campo vacío
+                    nombre_web = request.form.get("nombre_funcion_input", "").strip()
+                    if nombre_web == "":
+                        print("⚠️ Debes ingresar el nombre de la función.")
+                    else:
+                        ejecutar_ejercicio1(nombre_web)
+
                 elif num_ej == 2:
-                    numero_web = float(request.form.get("numero_input", 5))
-                    ejecutar_ejercicio2(numero_web)
+                    # CORREGIDO: sin default silencioso
+                    numero_str = request.form.get("numero_input", "").strip()
+                    if numero_str == "":
+                        print("⚠️ Debes ingresar un número.")
+                    else:
+                        ejecutar_ejercicio2(float(numero_str))
+
                 elif num_ej == 3:
-                    a_web = float(request.form.get("valor_a_input", 2))
-                    b_web = float(request.form.get("valor_b_input", 3))
-                    ejecutar_ejercicio3(a_web, b_web)
+                    # CORREGIDO: sin defaults silenciosos
+                    a_str = request.form.get("valor_a_input", "").strip()
+                    b_str = request.form.get("valor_b_input", "").strip()
+                    if a_str == "" or b_str == "":
+                        print("⚠️ Debes ingresar ambos valores (A y B).")
+                    else:
+                        ejecutar_ejercicio3(float(a_str), float(b_str))
+
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
