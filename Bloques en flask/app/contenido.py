@@ -1,8 +1,10 @@
-# app/contenido_pdf.py
+# app/contenido.py
+# Contenido del compendio oficial — 20 bloques alineados al PDF
 
 COMPENDIO = {
+
     "bloque00": {
-        "titulo": "Bloque 0: Introducción a la POO",
+        "titulo": "Bloque 00: Introducción a la POO",
         "concepto": """¿Qué es la POO?
 La Programación Orientada a Objetos (POO) es un paradigma que organiza el software alrededor de objetos, representando entidades del mundo real.
 En lugar de pensar solo en funciones y pasos, la POO propone modelar el sistema como un conjunto de clases y objetos que interactúan entre sí.
@@ -16,345 +18,681 @@ Clase vs Objeto
 ¿Por qué usar POO?
 • Organización: estructurar programas grandes de forma clara.
 • Reutilización: usar clases en múltiples partes del sistema.
-• Escalabilidad: el sistema puede crecer sin volverse caótico.""",
+• Escalabilidad: el sistema puede crecer sin volverse caótico.
+• Mantenimiento: más fácil modificar una clase específica.
+• Modelado real: representar el mundo real en código.
+• Base para frameworks: Django, Flask, Spring, .NET usan POO intensivamente.
+
+Diferencia con Programación Estructurada
+Estructurada → todo son funciones sueltas: def registrar_cliente(): pass
+POO → todo organizado en objetos: class Cliente: def registrar(self): pass""",
         "ejemplo": """class Cliente:
     def __init__(self, nombre):
         self.nombre = nombre
 
-cli = Cliente("Daniel")
-print(cli.nombre)  # Salida: Daniel
-# cli es el OBJETO""",
+cli = Cliente("Daniel")  # cli es el OBJETO
+print(cli.nombre)        # Daniel""",
         "total_ejercicios": 3
     },
 
     "bloque01": {
-        "titulo": "Bloque 1: Sintaxis Básica e Impresión",
-        "concepto": """Sintaxis Básica en Python
-Python destaca por su sintaxis limpia y legible. A diferencia de otros lenguajes, no utiliza llaves {} para definir bloques de código, sino que se apoya estrictamente en la indentación (espacios o tabulaciones).
+        "titulo": "Bloque 01: El Constructor __init__",
+        "concepto": """¿Qué es el constructor?
+El constructor es un método especial que se ejecuta automáticamente cuando se crea un objeto. En Python se escribe __init__ (doble guion bajo).
+Su propósito es inicializar el objeto dejándolo preparado con sus datos iniciales.
 
-Variables y Asignación
-En Python no es necesario declarar explícitamente el tipo de dato de una variable; el intérprete lo infiere de forma dinámica en tiempo de ejecución.
+¿Qué es self?
+self representa al objeto actual. Permite guardar atributos dentro de ese objeto específico, por eso cada instancia puede tener sus propios valores.
 
-Impresión en Consola
-La función integrada `print()` es la herramienta fundamental para enviar información a la salida estándar (stdout). Permite interpolar variables de forma elegante mediante f-strings.""",
-        "ejemplo": """# Ejemplo de sintaxis e impresión
-nombre_curso = "POO Avanzado"
-print(f"Bienvenidos al curso de: {nombre_curso}")""",
+Constructor con validación
+El constructor puede validar datos, evitando crear objetos con valores inválidos.
+
+Parámetros por defecto
+Se pueden definir valores por defecto en los parámetros del constructor.
+
+Constructor alternativo con @classmethod
+Permite crear objetos desde estructuras como diccionarios, sin llamar directamente a __init__.
+
+Puntos clave
+• __init__ inicializa objetos al momento de crearse.
+• Se ejecuta automáticamente; no hay que llamarlo.
+• Usa self para guardar atributos dentro del objeto.
+• No retorna valores.
+• Puede recibir parámetros y definir valores por defecto.
+• Puede validar datos antes de guardarlos.
+• Si no se define, Python crea uno vacío internamente.""",
+        "ejemplo": """class Producto:
+    def __init__(self, nombre, precio):
+        if precio < 0:
+            raise ValueError("El precio no puede ser negativo")
+        self.nombre = nombre
+        self.precio = precio
+
+p = Producto("Laptop", 900)   # OK
+# p = Producto("Mouse", -10) # ValueError""",
         "total_ejercicios": 4
     },
 
     "bloque02": {
-        "titulo": "Bloque 2: Variables y Tipos de Datos",
-        "concepto": """Tipos de Datos Primitivos
-Python maneja varios tipos de datos nativos esenciales para cualquier algoritmo:
-• Enteros (int): Números sin decimales (ej. 25, -10).
-• Flotantes (float): Números con precisión decimal (ej. 3.14, -0.5).
-• Cadenas (str): Texto delimitado por comillas simples o dobles.
-• Booleanos (bool): Valores de lógica binaria: True o False.
+        "titulo": "Bloque 02: Variables y Tipos de Datos",
+        "concepto": """Tipos simples
+• int: 19, -5, 0
+• float: 3.14, -2.5
+• str: "Hola", "Python"
+• bool: True, False
+• None: ausencia de valor
 
-Tipado Dinámico
-Una variable puede cambiar de tipo en cualquier momento simplemente asignándole un nuevo valor.""",
-        "ejemplo": """edad = 25          # int
-precio = 19.99      # float
-nombre = "Carlos"   # str
-activo = True       # bool
+Tipos complejos
+• list — colección ordenada y mutable: [1, 2, 3, "python"]
+• tuple — colección inmutable: (1, "hello", 3.14)
+• dict — pares clave-valor: {"nombre": "Juan", "edad": 25}
+• set — elementos únicos sin orden: {1, 2, 3}
 
-print(type(edad))   # <class 'int'>""",
+Acceso por índice
+Python cuenta desde 0: posición 0 = primer elemento, -1 = último elemento.
+
+Slicing (rebanado)
+Sintaxis: [inicio:fin] → incluye inicio, NO incluye fin.""",
+        "ejemplo": """lista = [1, 2, 3, 4, 5]
+print(lista[0])    # 1  (primero)
+print(lista[-1])   # 5  (último)
+print(lista[1:4])  # [2, 3, 4]
+
+cadena = "Hello World"
+print(cadena[0])    # H
+print(cadena[0:5])  # Hello""",
         "total_ejercicios": 3
     },
 
     "bloque03": {
-        "titulo": "Bloque 3: Operadores Aritméticos",
-        "concepto": """Operaciones Matemáticas Básicas
-Python incluye todos los operadores matemáticos estándar para realizar cálculos numéricos:
-• Suma (+), Resta (-), Multiplicación (*) y División (/).
-• División Entera (//): Descarta la parte decimal devolviendo solo el entero.
-• Módulo (%): Devuelve el residuo de una división entera.
-• Exponente (**): Eleva un número a la potencia de otro.""",
-        "ejemplo": """a = 10
-b = 3
+        "titulo": "Bloque 03: Operadores",
+        "concepto": """Operadores Aritméticos
++ → suma       - → resta        * → multiplicación
+/ → división   // → división entera    % → módulo / residuo    ** → potencia
 
-print(a / b)   # 3.3333333333333335 (División flotante)
-print(a // b)  # 3 (División entera)
-print(a % b)   # 1 (Residuo)
-print(a ** b)  # 1000 (Potencia)""",
+Operadores de Comparación
+== → igual     != → diferente     > → mayor     < → menor
+>= → mayor o igual     <= → menor o igual
+
+Operadores Lógicos
+and → ambas condiciones verdaderas
+or  → al menos una condición verdadera
+not → invierte el resultado
+
+CONCEPTO CLAVE: == vs is
+== compara el VALOR (contenido).
+is compara la REFERENCIA en memoria (¿es el mismo objeto?).
+
+Precedencia de operadores (de mayor a menor)
+1° (mayor) → **
+2° → *, /, //, %
+3° → +, -
+4° → ==, !=, >, <, >=, <=
+5° → not
+6° → and
+7° (menor) → or""",
+        "ejemplo": """a = [1, 2]
+b = [1, 2]
+c = a
+
+print(a == b)  # True  → mismo contenido
+print(a is b)  # False → objetos distintos en memoria
+print(a is c)  # True  → misma referencia""",
         "total_ejercicios": 3
     },
 
     "bloque04": {
-        "titulo": "Bloque 4: Formateo de Cadenas",
-        "concepto": """Manipulación y Estilo de Textos
-El formateo de cadenas nos permite construir textos dinámicos insertando variables de manera legible y ordenada.
+        "titulo": "Bloque 04: Entrada y Salida (input / print)",
+        "concepto": """print()
+Muestra información en pantalla. Admite f-strings, sep y end.
 
-Métodos de Formateo:
-1. Concatenación tradicional utilizando el operador (+).
-2. Método clásico `.format()`.
-3. f-strings (Formated String Literals): Introducidos en Python 3.6, es la manera moderna, rápida y recomendada por su alta legibilidad.""",
-        "ejemplo": """producto = "Laptop"
-precio = 799.99
+input()
+Lee datos del usuario. ⚠ SIEMPRE devuelve str (texto).
 
-# El método moderno f-string
-mensaje = f"El artículo {producto} tiene un costo de ${precio:.2f}"
-print(mensaje)""",
+Casting (conversión de tipos)
+int()   → convierte a entero
+float() → convierte a decimal
+str()   → convierte a texto
+
+Error común
+Sin convertir: edad = input("Edad: ")
+print(edad + 5)  → ❌ ERROR: str + int
+
+Con conversión: edad = int(input("Edad: "))
+print(edad + 5)  → ✓ OK: int + int""",
+        "ejemplo": """nombre = "Ana"
+edad   = 25
+print(f"Nombre: {nombre}, Edad: {edad}")
+print("Python", "Java", sep=" → ", end="!\\n")
+
+# Simulando input
+nombre = "Carlos"
+edad   = int("30")
+print(f"Hola {nombre}, tienes {edad} años.")""",
         "total_ejercicios": 3
     },
 
     "bloque05": {
-        "titulo": "Bloque 5: Estructuras Condicionales",
-        "concepto": """Control de Flujo Lógico
-Las estructuras condicionales permiten que el programa tome decisiones y ejecute diferentes bloques de código dependiendo de si una condición se cumple o no.
-
-Palabras Clave:
-• `if`: Evalúa la primera condición.
-• `elif`: Evalúa condiciones adicionales si las anteriores fueron falsas.
-• `else`: Se ejecuta por defecto si ninguna de las condiciones previas fue verdadera.""",
-        "ejemplo": """nota = 85
-
-if nota >= 90:
-    print("Excelente")
-elif nota >= 70:
-    print("Aprobado")
+        "titulo": "Bloque 05: Condicionales (if / elif / else)",
+        "concepto": """Estructura básica
+if condicion:
+    # se ejecuta si es verdadera
+elif otra_condicion:
+    # si la anterior era falsa y esta verdadera
 else:
-    print("Reprobado")""",
+    # si ninguna fue verdadera
+
+Operador ternario
+mensaje = "Mayor de edad" if edad >= 18 else "Menor de edad"
+
+match-case (Python 3.10+)
+Permite comparar un valor contra múltiples patrones de forma limpia.
+
+Evaluación corta (short-circuit)
+Si la primera condición de un and es False, Python NO evalúa la segunda. Optimiza rendimiento.""",
+        "ejemplo": """nota = 85
+if nota >= 90:   print("A")
+elif nota >= 80: print("B")
+elif nota >= 70: print("C")
+else:            print("D")
+
+# Operador ternario
+numero = 15
+resultado = "Par" if numero % 2 == 0 else "Impar"
+print(resultado)  # Impar""",
         "total_ejercicios": 3
     },
 
     "bloque06": {
-        "titulo": "Bloque 6: Bucles Iterativos (for)",
-        "concepto": """Iteración Definida
-El bucle `for` se utiliza para recorrer estructuras secuenciales (como listas, tuplas o diccionarios) o para ejecutar un bloque de código un número determinado de veces.
+        "titulo": "Bloque 06: Bucles (for / while)",
+        "concepto": """while
+Ejecuta un bloque mientras una condición sea verdadera.
 
-Función `range()`:
-Genera una secuencia numérica controlada. Puede recibir hasta tres parámetros: inicio, fin (no inclusivo) y el paso del incremento.""",
-        "ejemplo": """# Imprimir números pares del 2 al 10
-for i in range(2, 11, 2):
-    print(f"Número: {i}")""",
+for con range()
+Itera sobre una secuencia numérica controlada.
+range(5) → 0,1,2,3,4
+range(0, 10, 2) → 0,2,4,6,8 (paso 2)
+
+for sobre colecciones
+Recorre listas, tuplas y diccionarios directamente.
+
+enumerate()
+Devuelve pares (índice, elemento) en cada iteración.
+
+break y continue
+break: termina el bucle completamente.
+continue: salta la iteración actual y pasa a la siguiente.
+
+List Comprehension
+Sintaxis compacta para crear listas:
+[expresión for elemento in iterable if condición]""",
+        "ejemplo": """# while
+contador = 1
+while contador <= 3:
+    print(f"Contador: {contador}")
+    contador += 1
+
+# enumerate
+frutas = ["manzana", "pera", "uva"]
+for indice, fruta in enumerate(frutas):
+    print(indice, fruta)
+
+# list comprehension
+pares = [x for x in range(10) if x % 2 == 0]
+print(pares)  # [0, 2, 4, 6, 8]""",
         "total_ejercicios": 3
     },
 
     "bloque07": {
-        "titulo": "Bloque 7: Bucles de Condición (while)",
-        "concepto": """Iteración Indefinida
-El bucle `while` ejecuta un bloque de código continuamente **mientras** una condición lógica dada permanezca como verdadera (`True`).
+        "titulo": "Bloque 07: Funciones",
+        "concepto": """Estructura básica
+def nombre_funcion(parametros):
+    return valor
 
-Control de Bucles:
-• Es crítico actualizar las variables de control dentro del bucle para evitar bucles infinitos que congelen el servidor.
-• `break`: Rompe y sale del bucle inmediatamente.
-• `continue`: Salta el resto del código actual y pasa a la siguiente iteración.""",
-        "ejemplo": """contador = 1
-while contador <= 5:
-    print(f"Vuelta {contador}")
-    contador += 1  # Incremento de control""",
+Parámetros por defecto y retorno múltiple
+Los parámetros pueden tener valores predeterminados.
+Una función puede retornar múltiples valores como tupla.
+
+*args y **kwargs
+*args   → múltiples argumentos posicionales (se empaquetan en tupla).
+**kwargs → múltiples argumentos con nombre (se empaquetan en dict).
+
+Funciones lambda
+Funciones anónimas de una sola línea.
+cuadrado = lambda x: x**2
+
+Recursividad
+Una función que se llama a sí misma. Siempre debe tener un caso base para detener la recursión.""",
+        "ejemplo": """def sumar_varios(*numeros):
+    return sum(numeros)
+
+print(sumar_varios(1, 2, 3, 4))  # 10
+
+def factorial(n):
+    if n == 0: return 1         # caso base
+    return n * factorial(n - 1) # llamada recursiva
+
+print(factorial(5))  # 120""",
         "total_ejercicios": 3
     },
 
     "bloque08": {
-        "titulo": "Bloque 8: Listas y Métodos Nativos",
-        "concepto": """Estructuras Secuenciales Mutables
-Las listas son colecciones ordenadas de elementos que pueden modificarse (mutables). Pueden contener diferentes tipos de datos simultáneamente.
+        "titulo": "Bloque 08: Listas",
+        "concepto": """Métodos principales
+append(x)  → agregar al final
+extend(L)  → agregar múltiples elementos
+insert(i,x)→ insertar en posición i
+pop()      → eliminar y retornar el último
+remove(x)  → eliminar primera ocurrencia de x
+sort()     → ordenar in-place
+reverse()  → invertir in-place
+clear()    → vaciar la lista
+copy()     → copia superficial
+count(x)   → contar ocurrencias de x
+index(x)   → posición de x
 
-Métodos de Listas Comunes:
-• `.append(x)`: Añade un elemento al final.
-• `.insert(i, x)`: Inserta un elemento en una posición específica.
-• `.remove(x)`: Elimina la primera ocurrencia de un valor.
-• `.pop()`: Elimina y retorna el último elemento.""",
-        "ejemplo": """frutas = ["Manzana", "Pera"]
-frutas.append("Uva")
-frutas.insert(1, "Mango")
+Funciones integradas sobre listas
+len(), sum(), max(), min(), sorted()
 
-print(frutas)  # ['Manzana', 'Mango', 'Pera', 'Uva']""",
+CONCEPTO CLAVE — referencia vs copia
+Asignar una lista a otra variable NO crea una copia, crea otra referencia al mismo objeto.
+Usar .copy() para obtener un objeto independiente.""",
+        "ejemplo": """nums = [10, 5, 8, 1, 9]
+print(sum(nums))     # 33
+print(max(nums))     # 10
+print(sorted(nums))  # [1, 5, 8, 9, 10] — no modifica original
+nums.sort()          # [1, 5, 8, 9, 10] — sí modifica original
+
+lista      = [1, 2, 3]
+copia_ref  = lista         # misma referencia
+copia_real = lista.copy()  # objeto nuevo
+copia_ref.append(4)
+print(lista)       # [1, 2, 3, 4] ← también cambió
+print(copia_real)  # [1, 2, 3]    ← no cambió""",
         "total_ejercicios": 3
     },
 
     "bloque09": {
-        "titulo": "Bloque 9: Tuplas y Sets (Inmutables)",
-        "concepto": """Colecciones Especializadas
-• Tuplas (`tuple`): Colecciones ordenadas de elementos que **no se pueden modificar** después de su creación (inmutables). Se definen con paréntesis `()`. Ofrecen mayor velocidad y seguridad de datos.
-• Conjuntos (`set`): Colecciones no ordenadas de elementos únicos. No permiten duplicados y se definen con llaves `{}`. Ideales para operaciones matemáticas de conjuntos.""",
-        "ejemplo": """# Tupla inmutable
-mi_tupla = (1, 2, 3)
-# mi_tupla[0] = 99  --> Lanza TypeError
+        "titulo": "Bloque 09: Tuplas",
+        "concepto": """Concepto
+Las tuplas son INMUTABLES: no se pueden modificar tras crearse.
+Son más rápidas que las listas y se usan cuando los datos no deben cambiar.
 
-# Set sin duplicados
-mi_set = {1, 2, 2, 3}
-print(mi_set)  # {1, 2, 3}""",
+Métodos disponibles
+count(x) → contar ocurrencias de x
+index(x) → posición de x
+
+Unpacking (desempaquetado)
+Permite asignar elementos de una tupla a variables individuales.
+primero, *resto, ultimo = (1, 2, 3, 4, 5)
+
+Conversión
+Para modificar una tupla: convertirla a lista, modificar y volver a convertir.""",
+        "ejemplo": """tupla = (1, 2, 3)
+# tupla[0] = 10  → ❌ TypeError: inmutable
+
+# Unpacking
+a, b, c = (1, 2, 3)
+primero, *resto, ultimo = (1, 2, 3, 4, 5)
+# primero=1, resto=[2,3,4], ultimo=5
+
+# Recorrer coordenadas
+coordenadas = [(1,2), (3,4)]
+for x, y in coordenadas:
+    print(f"x={x}, y={y}")""",
         "total_ejercicios": 3
     },
 
     "bloque10": {
-        "titulo": "Bloque 10: Diccionarios de Datos",
-        "concepto": """Estructuras Clave-Valor
-Los diccionarios son colecciones indexadas mediante llaves personalizadas (claves) en lugar de índices numéricos. Son mutables y de alta velocidad para búsquedas.
+        "titulo": "Bloque 10: Diccionarios",
+        "concepto": """Concepto
+Estructura de pares clave:valor. Base de JSON, APIs, configuraciones.
 
-Características:
-• Las claves deben ser únicas e inmutables (cadenas, números o tuplas).
-• Los valores pueden ser de cualquier tipo de datos, incluyendo listas u otros diccionarios anidados.""",
-        "ejemplo": """usuario = {
-    "username": "dev123",
-    "rol": "admin",
-    "puntos": 150
-}
-print(usuario["username"])  # dev123
-usuario["puntos"] += 10    # Modificación""",
+Acceso y modificación
+persona["nombre"]              → acceso directo
+persona.get("telefono", "N/A") → acceso seguro con valor por defecto
+persona["edad"] = 26           → modificar
+del persona["telefono"]        → eliminar
+
+Métodos útiles
+.keys(), .values(), .items(), .update(), .copy()
+
+Dict comprehension y anidados
+{x: x**2 for x in range(5)} → {0:0, 1:1, 2:4, 3:9, 4:16}
+
+Diccionarios anidados
+Pueden contener otros diccionarios como valores.""",
+        "ejemplo": """persona = {"nombre": "Juan", "edad": 25}
+
+print(persona["nombre"])              # Juan
+print(persona.get("telefono", "N/A")) # N/A
+
+for clave, valor in persona.items():
+    print(clave, "→", valor)
+
+cuadrados = {x: x**2 for x in range(5)}
+print(cuadrados)  # {0:0, 1:1, 2:4, 3:9, 4:16}""",
         "total_ejercicios": 3
     },
 
     "bloque11": {
-        "titulo": "Bloque 11: Funciones y Argumentos",
-        "concepto": """Bloques de Código Reutilizables
-Las funciones estructuran el código en unidades lógicas independientes que realizan tareas específicas. Se declaran con la palabra clave `def`.
+        "titulo": "Bloque 11: Conjuntos (set)",
+        "concepto": """Concepto
+• Sin duplicados, sin orden garantizado.
+• Muy útil para eliminar repetidos y operaciones matemáticas.
 
-Parámetros Avanzados:
-• Argumentos por defecto: Asignan valores predeterminados.
-• `*args`: Permite recibir una cantidad indeterminada de argumentos posicionales como una tupla.
-• `**kwargs`: Permite recibir múltiples argumentos de palabras clave como un diccionario.""",
-        "ejemplo": """def registrar_usuario(nombre, rol="Invitado"):
-    return f"Usuario: {nombre} | Rol: {rol}"
+Operaciones matemáticas
+Unión          |  ó .union()
+Intersección   &  ó .intersection()
+Diferencia     -  ó .difference()
+Dif. simétrica ^  ó .symmetric_difference()
 
-print(registrar_usuario("Ana"))
-print(registrar_usuario("Luis", "Admin"))""",
+Métodos
+add(x)     → agregar elemento
+remove(x)  → eliminar; lanza KeyError si no existe
+discard(x) → eliminar; sin error si no existe
+pop()      → eliminar y retornar aleatorio""",
+        "ejemplo": """A = {1, 2, 3, 4}
+B = {3, 4, 5, 6}
+print(A | B)  # {1, 2, 3, 4, 5, 6}
+print(A & B)  # {3, 4}
+print(A - B)  # {1, 2}
+print(A ^ B)  # {1, 2, 5, 6}
+
+# Eliminar duplicados de una lista
+lista    = [1, 2, 2, 3, 3, 3]
+sin_dup  = list(set(lista))
+print(sin_dup)  # [1, 2, 3]""",
         "total_ejercicios": 3
     },
 
     "bloque12": {
-        "titulo": "Bloque 12: Manejo de Excepciones",
-        "concepto": """Control de Errores en Tiempo de Ejecución
-El manejo de excepciones evita que una aplicación colapse abruptamente cuando ocurre un error imprevisto (como divisiones por cero o datos inválidos).
-
-Estructura Completa:
-• `try`: Código que se va a intentar ejecutar.
-• `except`: Captura y maneja un error específico si este ocurre.
-• `else`: Se ejecuta solo si el bloque `try` no lanzó ninguna excepción.
-• `finally`: Bloque de código que se ejecutará siempre, haya o no error (ideal para cerrar archivos o conexiones).""",
-        "ejemplo": """try:
-    num = int("hola")
-except ValueError:
-    print("❌ Error: No se puede convertir texto a número.")
+        "titulo": "Bloque 12: Excepciones (try / except)",
+        "concepto": """Estructura completa
+try:
+    # código que puede fallar
+except TipoError as e:
+    # manejar el error
+else:
+    # se ejecuta si NO hubo error
 finally:
-    print("Limpieza completada.")""",
+    # se ejecuta SIEMPRE
+
+Tipos de error comunes
+ValueError        → valor inválido (ej. int("abc"))
+TypeError         → tipo incorrecto (str + int)
+IndexError        → índice fuera de rango
+KeyError          → clave no existe en dict/set
+ZeroDivisionError → división por cero
+FileNotFoundError → archivo no encontrado
+
+raise manual
+Permite lanzar un error personalizado: raise ValueError("Edad inválida")
+
+assert
+Verifica una condición; si es falsa lanza AssertionError.""",
+        "ejemplo": """try:
+    n = int("abc")
+except ValueError as e:
+    print("Error de conversión:", e)
+
+def validar_edad(edad):
+    if edad < 0:
+        raise ValueError("Edad inválida")
+    return edad
+
+class MiError(Exception):
+    pass""",
         "total_ejercicios": 3
     },
 
     "bloque13": {
-        "titulo": "Bloque 13: Decoradores de Código",
-        "concepto": """Modificación Dinámica de Funciones
-Un decorador es una función que recibe otra función como argumento, le añade alguna funcionalidad extra (como validaciones o registros de logs) y retorna una nueva función modificada sin alterar su código fuente original.
+        "titulo": "Bloque 13: Decoradores",
+        "concepto": """Concepto
+Un decorador es una función que recibe otra función, modifica su comportamiento y retorna una nueva función.
+Se aplica con @nombre_decorador antes de la función que se quiere decorar.
 
-Sintaxis:
-Se aplican de forma elegante encima de una función utilizando el símbolo `@` seguido del nombre del decorador.""",
-        "ejemplo": """def mi_decorador(funcion_original):
-    def envoltura():
-        print("Antes de ejecutar...")
-        funcion_original()
-        print("Después de ejecutar...")
-    return envoltura
+Estructura
+def mi_decorador(funcion_original):
+    def wrapper(*args, **kwargs):
+        # código antes
+        resultado = funcion_original(*args, **kwargs)
+        # código después
+        return resultado
+    return wrapper
+
+Usos reales
+• Validar datos antes de ejecutar.
+• Controlar acceso (autenticación en Django/Flask).
+• Registrar logs de ejecución.
+• Medir tiempo de ejecución.""",
+        "ejemplo": """def mi_decorador(f):
+    def wrapper(*args, **kwargs):
+        print("Antes de ejecutar")
+        resultado = f(*args, **kwargs)
+        print("Después de ejecutar")
+        return resultado
+    return wrapper
 
 @mi_decorador
 def saludar():
-    print("¡Hola!")
+    print("Hola mundo")
 
-saludar()""",
+saludar()
+# Antes de ejecutar
+# Hola mundo
+# Después de ejecutar""",
         "total_ejercicios": 3
     },
 
     "bloque14": {
-        "titulo": "Bloque 14: Desempaquetado (Unpacking)",
-        "concepto": """Extracción Eficiente de Estructuras
-El desempaquetado permite asignar elementos de colecciones iterables (como listas o tuplas) directamente a variables individuales en una sola línea de código.
+        "titulo": "Bloque 14: Unpacking (Desempaquetado)",
+        "concepto": """Concepto
+Unpacking = extraer valores de una estructura y asignarlos a variables individuales.
 
-Operadores Especiales:
-• Operador asterisco (`*`): Agrupa elementos restantes en una sublista durante el desempaquetado.
-• Desempaquetado de Diccionarios (`**`): Útil para fusionar diccionarios o pasar configuraciones masivas.""",
-        "ejemplo": """numeros = [1, 2, 3, 4]
-a, b, *resto = numeros
+Básico
+a, b = [1, 2]
+a, b, c = (1, 2, 3)
 
-print(a)      # 1
-print(b)      # 2
-print(resto)  # [3, 4]""",
+Con operador *
+primero, *resto, ultimo = [1, 2, 3, 4, 5]
+# primero=1, resto=[2,3,4], ultimo=5
+
+En funciones
+def suma(a, b, c): return a + b + c
+numeros = [1, 2, 3]
+suma(*numeros)  # equivale a suma(1, 2, 3)
+
+Combinar diccionarios con **
+dict1 = {"a": 1}
+dict2 = {"b": 2}
+combinado = {**dict1, **dict2}  # {"a":1, "b":2}""",
+        "ejemplo": """primera, *mitad, ultima = (10, 20, 30, 40)
+print(primera)  # 10
+print(mitad)    # [20, 30]
+print(ultima)   # 40
+
+coordenadas = [(1,2), (3,4), (5,6)]
+for x, y in coordenadas:
+    print(f"x={x}, y={y}")""",
         "total_ejercicios": 3
     },
 
     "bloque15": {
         "titulo": "Bloque 15: Funciones de Orden Superior",
-        "concepto": """Programación Funcional
-Las funciones de orden superior son aquellas que pueden recibir otras funciones como argumentos o devolver funciones como resultado.
+        "concepto": """Concepto
+Una función de orden superior recibe otra función como parámetro o devuelve una función.
 
-Herramientas Nativas Clave:
-• `lambda`: Declaración abreviada de funciones anónimas en una línea.
-• `map(f, iterable)`: Aplica una función a cada elemento de una secuencia.
-• `filter(f, iterable)`: Filtra elementos que cumplan una condición lógica.""",
-        "ejemplo": """numeros = [1, 2, 3, 4]
-# Multiplicar todos los elementos por 2 usando lambda y map
-duplicados = list(map(lambda x: x * 2, numeros))
-print(duplicados)  # [2, 4, 6, 8]""",
+map()
+Aplica una función a cada elemento de una colección.
+list(map(lambda x: x**2, [1,2,3,4])) → [1, 4, 9, 16]
+
+filter()
+Filtra elementos según condición (True/False).
+list(filter(lambda x: x % 2 == 0, [1,2,3,4])) → [2, 4]
+
+reduce()
+Reduce la colección a un único valor acumulado.
+from functools import reduce
+reduce(lambda x, y: x + y, [1,2,3,4]) → 10""",
+        "ejemplo": """from functools import reduce
+
+numeros = [1, 2, 3, 4, 5, 6]
+
+# Cuadrado de los pares
+resultado = list(
+    map(lambda x: x**2,
+        filter(lambda x: x % 2 == 0, numeros))
+)
+print(resultado)  # [4, 16, 36]
+
+# Producto total con reduce
+producto = reduce(lambda x, y: x * y, [1, 2, 3, 4])
+print(producto)  # 24""",
         "total_ejercicios": 3
     },
 
     "bloque16": {
-        "titulo": "Bloque 16: Comprensión de Listas",
-        "concepto": """Sintaxis Compacta para Colecciones
-La comprensión de listas (List Comprehensions) provee una forma elegante y optimizada en rendimiento para crear nuevas listas a partir de iterables existentes.
+        "titulo": "Bloque 16: Archivos y JSON",
+        "concepto": """Modos de apertura
+"r" → lectura
+"w" → escritura (sobrescribe)
+"a" → append — agrega al final
+"x" → crear; error si ya existe
 
-Ventajas:
-• Reduce múltiples líneas de bucles `for` tradicionales a una sola línea.
-• Es más veloz en tiempo de procesamiento interno de Python e incorpora condicionales internos de filtrado.""",
-        "ejemplo": """# Crear lista de cuadrados de números pares
-cuadrados_pares = [x**2 for x in range(1, 6) if x % 2 == 0]
-print(cuadrados_pares)  # [4, 16]""",
+Lectura y escritura de texto
+La sentencia with garantiza el cierre automático del archivo.
+
+JSON
+import json
+json.dump(datos, f, indent=2)  → guardar
+json.load(f)                   → cargar
+
+Permite guardar y cargar estructuras Python (dicts, listas) como archivos de texto estructurado.""",
+        "ejemplo": """import json
+
+# Guardar JSON
+datos = {"nombre": "Juan", "edad": 25, "activo": True}
+with open("datos.json", "w") as f:
+    json.dump(datos, f, indent=2)
+
+# Cargar JSON
+with open("datos.json", "r") as f:
+    cargado = json.load(f)
+print(cargado["nombre"])  # Juan""",
         "total_ejercicios": 3
     },
 
     "bloque17": {
-        "titulo": "Bloque 17: Manejo de Archivos I/O",
-        "concepto": """Persistencia de Datos en Disco
-Python permite interactuar con el sistema de archivos del sistema operativo para leer o escribir datos de forma permanente.
+        "titulo": "Bloque 17: Mixins",
+        "concepto": """Concepto
+Un Mixin es una clase que NO se usa sola. Se diseña para agregar funcionalidad a otras clases mediante herencia, evitando duplicar código.
+Regla: si una clase es un Mixin, su nombre suele terminar en Mixin.
 
-Sentencia `with` (Context Manager):
-Es el estándar profesional para abrir archivos. Garantiza la liberación segura de recursos del sistema cerrando el archivo de forma automática al finalizar el bloque, incluso si ocurren errores inesperados.""",
-        "ejemplo": """# Escritura segura de un archivo de texto
-with open("ejemplo.txt", "w", encoding="utf-8") as archivo:
-    archivo.write("Línea guardada en el sistema.")
+Uso
+class MiClase(MixinA, MixinB):
+    ...
 
-# El archivo se cierra automáticamente aquí""",
+MRO — Orden de Resolución de Métodos
+Python busca los métodos de izquierda a derecha en la lista de herencia.
+class C(A, B): → Python busca en C → A → B → object""",
+        "ejemplo": """class ValidacionMixin:
+    def validar_nombre(self, nombre):
+        if not nombre:
+            raise ValueError("Nombre vacío")
+    def validar_edad(self, edad):
+        if edad < 0:
+            raise ValueError("Edad inválida")
+
+class SistemaEstudiantes(ValidacionMixin):
+    def __init__(self):
+        self.estudiantes = []
+    def registrar(self, nombre, edad):
+        self.validar_nombre(nombre)
+        self.validar_edad(edad)
+        self.estudiantes.append({"nombre": nombre, "edad": edad})
+
+sistema = SistemaEstudiantes()
+sistema.registrar("Daniel", 20)""",
         "total_ejercicios": 3
     },
 
     "bloque18": {
-        "titulo": "Bloque 18: POO Clases y Objetos",
-        "concepto": """Estructura Fundamental de Instanciación
-La Programación Orientada a Objetos formaliza las plantillas conceptuales mediante clases.
+        "titulo": "Bloque 18: Principios de POO y Conceptos Avanzados",
+        "concepto": """1. Abstracción
+Mostrar lo esencial y ocultar lo innecesario.
 
-Componentes Críticos:
-• `__init__`: El método constructor de la clase. Se ejecuta de forma automática al instanciar un nuevo objeto.
-• `self`: Variable de autoreferencia obligatoria que representa al objeto específico que está ejecutando el código actual, permitiendo acceder a sus atributos y métodos particulares.""",
-        "ejemplo": """class Persona:
-    def __init__(self, nombre, edad):
-        self.nombre = nombre  # Atributo
-        self.edad = edad
+2. Encapsulamiento
+Proteger los datos controlando el acceso a los atributos.
+Atributo privado con doble guion bajo: self.__saldo
 
-p1 = Persona("Laura", 22)  # Instanciación de objeto
-print(p1.nombre)""",
+3. Herencia
+Una clase hija reutiliza atributos y métodos de la clase padre.
+class Cliente(Persona): super().__init__(nombre)
+
+4. Polimorfismo
+El mismo método se comporta diferente en cada subclase.
+
+5. Property (getters y setters)
+@property → getter (leer atributo)
+@atributo.setter → setter con validación
+
+6. Clases Abstractas e Interfaces
+from abc import ABC, abstractmethod
+Obligan a las subclases a implementar métodos específicos.""",
+        "ejemplo": """from abc import ABC, abstractmethod
+
+class Figura(ABC):
+    @abstractmethod
+    def area(self): pass
+
+class Triangulo(Figura):
+    def __init__(self, base, altura):
+        self.base, self.altura = base, altura
+    def area(self):
+        return (self.base * self.altura) / 2
+
+class Cuenta:
+    def __init__(self):
+        self.__saldo = 0  # privado
+    def depositar(self, valor):
+        self.__saldo += valor
+    def ver_saldo(self):
+        return self.__saldo""",
         "total_ejercicios": 3
     },
 
     "bloque19": {
-        "titulo": "Bloque 19: POO Herencia Avanzada",
-        "concepto": """Reutilización de Estructuras Jerárquicas
-La herencia permite crear una clase nueva (clase hija) que adopta automáticamente todos los atributos y comportamientos de una clase existente (clase padre).
+        "titulo": "Bloque 19: Relaciones UML en Código",
+        "concepto": """Resumen de Relaciones
+Asociación  → una clase USA otra
+              Código típico: Venta(cliente)
 
-Función `super()`:
-Es una herramienta nativa fundamental que permite invocar de manera limpia y segura los métodos y el constructor de la clase padre desde la clase hija, evitando la duplicación innecesaria de lógica de inicialización.""",
-        "ejemplo": """class Vehiculo:
-    def __init__(self, marca):
-        self.marca = marca
+Agregación  → una clase CONTIENE objetos externos
+              Código típico: carrito.agregar(producto)
 
-class Auto(Vehiculo):
-    def __init__(self, marca, modelo):
-        super().__init__(marca)  # Llama al padre
-        self.modelo = modelo
+Composición → una clase CREA objetos internamente
+              Código típico: self.detalles.append(Detalle(...))
 
-mi_auto = Auto("Toyota", "Corolla")
-print(mi_auto.marca)  # Acceso heredado""",
+Herencia    → una clase ES una especialización
+              Código típico: class Cliente(Persona)
+
+Interfaz    → una clase CUMPLE un contrato
+              Código típico: class Venta(ICrud)""",
+        "ejemplo": """class Venta(ICrud):           # INTERFAZ
+    def __init__(self, cliente):  # AGREGACIÓN
+        self.cliente  = cliente
+        self.detalles = []
+
+    def agregar(self, producto, cantidad):
+        self.detalles.append(           # COMPOSICIÓN
+            DetalleVenta(producto, cantidad))
+
+    def crear(self, emp):
+        print("Empresa:", emp.razonsocial)  # ASOCIACIÓN
+
+class Cliente(Persona):  # HERENCIA
+    pass""",
         "total_ejercicios": 3
     }
 }
