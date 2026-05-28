@@ -3,6 +3,7 @@ from app.blueprints.bloque03.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b03_bp = Blueprint('bloque03', __name__, template_folder='../../templates')
 
@@ -42,37 +43,28 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    a_str = request.form.get("valor_a_input", "").strip()
-                    b_str = request.form.get("valor_b_input", "").strip()
-                    if a_str == "" or b_str == "":
-                        print("⚠️ Debes ingresar ambos valores (A y B).")
-                    else:
-                        ejecutar_ejercicio1(float(a_str), float(b_str))
+        if num_ej == 1:
+            a_str = request.form.get("valor_a_input", "").strip()
+            b_str = request.form.get("valor_b_input", "").strip()
+            if campos_vacios(a_str, b_str):
+                salida_consola = "⚠️ Debes ingresar ambos valores (A y B)."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, float(a_str), float(b_str))
 
-                elif num_ej == 2:
-                    item1 = request.form.get("item1_input", "").strip()
-                    item2 = request.form.get("item2_input", "").strip()
-                    if item1 == "" or item2 == "":
-                        print("⚠️ Debes ingresar ambos elementos.")
-                    else:
-                        ejecutar_ejercicio2(item1, item2)
+        elif num_ej == 2:
+            item1 = request.form.get("item1_input", "").strip()
+            item2 = request.form.get("item2_input", "").strip()
+            if campos_vacios(item1, item2):
+                salida_consola = "⚠️ Debes ingresar ambos elementos."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, item1, item2)
 
-                elif num_ej == 3:
-                    ejecutar_ejercicio3()
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3)
 
     return render_template(
         'ejercicio_detalle.html',
