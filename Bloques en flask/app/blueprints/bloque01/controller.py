@@ -60,7 +60,6 @@ def gestionar_ejercicio(num_ej):
                     ejecutar_ejercicio1()
 
                 elif num_ej == 2:
-                    # Validación server-side: campo obligatorio
                     precio_str = request.form.get("precio_input", "").strip()
                     if precio_str == "":
                         print("⚠️ Debes ingresar un precio en el campo interactivo.")
@@ -94,10 +93,6 @@ def gestionar_ejercicio(num_ej):
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
-        es_interactivo=reto["es_interactivo"],
-        consola=salida_consola,
-        datos_retos_nav=list(DATOS_RETOS.keys())
-    )
         es_interactivo=reto["es_interactivo"],
         consola=salida_consola,
         datos_retos_nav=list(DATOS_RETOS.keys())
