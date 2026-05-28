@@ -1,91 +1,103 @@
 # =====================================================================
-# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 15: FUNCIONES DE ORDEN SUPERIOR
+# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 12: EXCEPCIONES (try / except)
 # =====================================================================
-from functools import reduce
 
 # ---------------------------------------------------------------------
-# EJERCICIO 1: map() para incrementar en 1 cada elemento.
+# EJERCICIO 1: Captura ValueError al convertir input del usuario a int.
 # ---------------------------------------------------------------------
-class TransformadorMap:
-    def __init__(self, numeros: list):
-        self.numeros = numeros
+class ConvertidorSeguro:
+    def __init__(self, texto: str):
+        self.texto = texto
 
-    def incrementar(self):
-        print("🗺️  FUNCIONES DE ORDEN SUPERIOR — map()")
+    def convertir_a_entero(self):
+        print("🛡️ EXCEPCIONES — Captura de ValueError")
         print("--------------------------------------------------")
-        print(f"  Lista original  : {self.numeros}")
-        resultado = list(map(lambda x: x + 1, self.numeros))
-        print(f"  lambda x: x + 1")
-        print(f"\n  Resultado       : {resultado}")
-        print("\n💡 map() aplica la función a CADA elemento y devuelve un iterador.")
+        print(f"  Intentando convertir el texto: '{self.texto}' → int()")
+        try:
+            resultado = int(self.texto)
+            print(f"  ✅ Conversión exitosa: {resultado}")
+        except ValueError as e:
+            print(f"  ❌ ValueError capturado:")
+            print(f"     {e}")
+            print("\n  💡 int() lanza ValueError cuando el texto no representa un número entero válido.")
 
 
-class GestorMap:
+class GestorConversionSegura:
     @staticmethod
-    def ejecutar_demostracion(lista: list):
-        TransformadorMap(lista).incrementar()
+    def ejecutar_demostracion(texto: str):
+        ConvertidorSeguro(texto).convertir_a_entero()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 2: filter() para obtener elementos mayores a umbral.
+# EJERCICIO 2: Captura IndexError al acceder lista[5] en lista de 3 elementos.
 # ---------------------------------------------------------------------
-class FiltradorFilter:
-    def __init__(self, numeros: list):
-        self.numeros = numeros
+class AccesorListaSeguro:
+    def __init__(self, lista: list, indice: int):
+        self.lista  = lista
+        self.indice = indice
 
-    def filtrar_mayores(self, umbral: float):
-        print(f"🔍 FUNCIONES DE ORDEN SUPERIOR — filter() (umbral: {umbral})")
+    def acceder(self):
+        print(f"🛡️ EXCEPCIONES — Captura de IndexError")
         print("--------------------------------------------------")
-        print(f"  Lista original  : {self.numeros}")
-        resultado = list(filter(lambda x: x > umbral, self.numeros))
-        print(f"  lambda x: x > {umbral}")
-        print(f"\n  Resultado       : {resultado}")
-        print("\n💡 filter() conserva solo los elementos donde la función retorna True.")
+        print(f"  Lista   : {self.lista}")
+        print(f"  Índice  : {self.indice}")
+        try:
+            valor = self.lista[self.indice]
+            print(f"  ✅ Acceso exitoso: lista[{self.indice}] = {valor}")
+        except IndexError as e:
+            print(f"  ❌ IndexError capturado:")
+            print(f"     {e}")
+            print(f"\n  💡 La lista tiene {len(self.lista)} elementos (índices 0 a {len(self.lista)-1}).")
+            print(f"     El índice {self.indice} está fuera de rango.")
 
 
-class GestorFilter:
+class GestorAccesoLista:
     @staticmethod
-    def ejecutar_demostracion(lista: list, umbral: float):
-        FiltradorFilter(lista).filtrar_mayores(umbral)
+    def ejecutar_demostracion(lista: list, indice: int):
+        AccesorListaSeguro(lista, indice).acceder()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 3: reduce() para multiplicar todos los elementos.
+# EJERCICIO 3: try/except que maneje ValueError y ZeroDivisionError.
 # ---------------------------------------------------------------------
-class ReductorReduce:
-    def __init__(self, numeros: list):
-        self.numeros = numeros
+class CalculadoraSegura:
+    def __init__(self, texto_num: str, divisor: float):
+        self.texto_num = texto_num
+        self.divisor   = divisor
 
-    def multiplicar(self):
-        print("➡️  FUNCIONES DE ORDEN SUPERIOR — reduce()")
+    def dividir(self):
+        print("🛡️ EXCEPCIONES — Múltiples except (ValueError + ZeroDivisionError)")
         print("--------------------------------------------------")
-        print(f"  Lista original  : {self.numeros}")
-        if not self.numeros:
-            print("  ⚠️  Lista vacía, no se puede reducir.")
-            return
-        resultado = reduce(lambda x, y: x * y, self.numeros)
-        # Traza visual del proceso acumulativo
-        pasos = " × ".join(str(int(n) if n == int(n) else n) for n in self.numeros)
-        print(f"  lambda x, y: x * y")
-        print(f"  Proceso         : {pasos} = {resultado}")
-        print(f"\n  Resultado       : {resultado}")
-        print("\n💡 reduce() aplica la función de forma acumulada de izquierda a derecha.")
+        print(f"  Texto a convertir : '{self.texto_num}'")
+        print(f"  Divisor           : {self.divisor}")
+        try:
+            numero   = int(self.texto_num)
+            resultado = numero / self.divisor
+            print(f"\n  ✅ Resultado: {numero} / {self.divisor} = {resultado}")
+        except ValueError as e:
+            print(f"\n  ❌ ValueError → No se pudo convertir '{self.texto_num}' a entero.")
+            print(f"     Detalle: {e}")
+        except ZeroDivisionError as e:
+            print(f"\n  ❌ ZeroDivisionError → No se puede dividir entre cero.")
+            print(f"     Detalle: {e}")
+        finally:
+            print("\n  ✔ Bloque finally ejecutado siempre (cierre de recursos, logs, etc.).")
 
 
-class GestorReduce:
+class GestorCalculadoraSegura:
     @staticmethod
-    def ejecutar_demostracion(lista: list):
-        ReductorReduce(lista).multiplicar()
+    def ejecutar_analisis(texto_num: str, divisor: float):
+        CalculadoraSegura(texto_num, divisor).dividir()
 
 
 # =====================================================================
 # FUNCIONES DISPARADORAS
 # =====================================================================
-def ejecutar_ejercicio1(lista):
-    GestorMap.ejecutar_demostracion(lista)
+def ejecutar_ejercicio1(texto):
+    GestorConversionSegura.ejecutar_demostracion(texto)
 
-def ejecutar_ejercicio2(lista, umbral):
-    GestorFilter.ejecutar_demostracion(lista, umbral)
+def ejecutar_ejercicio2(lista, indice):
+    GestorAccesoLista.ejecutar_demostracion(lista, indice)
 
-def ejecutar_ejercicio3(lista):
-    GestorReduce.ejecutar_demostracion(lista)
+def ejecutar_ejercicio3(texto_num, divisor):
+    GestorCalculadoraSegura.ejecutar_analisis(texto_num, divisor)
