@@ -13,7 +13,7 @@ DATOS_RETOS = {
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Captura el IndexError que ocurre al acceder a un índice fuera de rango en una lista de 3 elementos.",
+        "enunciado": "Captura el IndexError que ocurre al acceder a un índice fuera de rango en una lista de 3 elementos [10, 20, 30]. Ingresa un índice >= 3 para provocar el error.",
         "codigo_fuente": "lista = [10, 20, 30]\ntry:\n    print(lista[indice])\nexcept IndexError as e:\n    print('IndexError:', e)",
         "es_interactivo": True
     },
@@ -23,6 +23,7 @@ DATOS_RETOS = {
         "es_interactivo": True
     }
 }
+
 
 @b12_bp.route('/concepto')
 def ver_concepto():
@@ -35,6 +36,7 @@ def ver_concepto():
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
+
 
 @b12_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -50,15 +52,34 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    texto_web = request.form.get("texto_input", "abc")
-                    ejecutar_ejercicio1(texto_web)
+                    texto_web = request.form.get("texto_input", "").strip()
+                    if texto_web == "":
+                        print("⚠️ Debes ingresar un texto.")
+                    else:
+                        ejecutar_ejercicio1(texto_web)
+
                 elif num_ej == 2:
-                    indice_web = int(request.form.get("indice_input", 5))
-                    ejecutar_ejercicio2([10, 20, 30], indice_web)
+                    indice_str = request.form.get("indice_input", "").strip()
+                    if indice_str == "":
+                        print("⚠️ Debes ingresar un índice.")
+                    else:
+                        indice_web = int(indice_str)
+                        # Índices negativos en Python son válidos y NO lanzan IndexError.
+                        # Para demostrar el error el índice debe ser >= len(lista) = 3
+                        if indice_web < 0:
+                            print("⚠️ Los índices negativos son válidos en Python (lista[-1] = último elemento).")
+                            print("   Para provocar un IndexError ingresa un índice >= 3.")
+                        else:
+                            ejecutar_ejercicio2([10, 20, 30], indice_web)
+
                 elif num_ej == 3:
-                    texto_web   = request.form.get("texto_num_input", "10")
-                    divisor_web = float(request.form.get("divisor_input", 0))
-                    ejecutar_ejercicio3(texto_web, divisor_web)
+                    texto_web = request.form.get("texto_num_input", "").strip()
+                    divisor_str = request.form.get("divisor_input", "").strip()
+                    if texto_web == "" or divisor_str == "":
+                        print("⚠️ Debes completar ambos campos.")
+                    else:
+                        ejecutar_ejercicio3(texto_web, float(divisor_str))
+
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
