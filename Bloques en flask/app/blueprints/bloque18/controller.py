@@ -2,8 +2,8 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque18.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b18_bp = Blueprint('bloque18', __name__, template_folder='../../templates')
 
@@ -25,48 +25,52 @@ DATOS_RETOS = {
     }
 }
 
+
 @b18_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque18", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque18",
         bloque_titulo=info.get("titulo", "Bloque 18"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b18_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    base_web   = float(request.form.get("base_input", 6.0))
-                    altura_web = float(request.form.get("altura_input", 4.0))
-                    ejecutar_ejercicio1(base_web, altura_web)
-                elif num_ej == 2:
-                    nombre_web = request.form.get("nombre_input", "Laptop")
-                    precio_web = float(request.form.get("precio_input", 900.0))
-                    ejecutar_ejercicio2(nombre_web, precio_web)
-                elif num_ej == 3:
-                    perro_web = request.form.get("perro_input", "Rex")
-                    gato_web  = request.form.get("gato_input", "Michi")
-                    vaca_web  = request.form.get("vaca_input", "Lola")
-                    ejecutar_ejercicio3(perro_web, gato_web, vaca_web)
-            except Exception as e:
-                print(f"❌ Error al procesar principios POO: {str(e)}")
-        salida_consola = f.getvalue()
+        if num_ej == 1:
+            base_str = request.form.get("base_input", "").strip()
+            altura_str = request.form.get("altura_input", "").strip()
+            if campos_vacios(base_str, altura_str):
+                salida_consola = "⚠️ Debes ingresar base y altura."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, float(base_str), float(altura_str))
+
+        elif num_ej == 2:
+            nombre = request.form.get("nombre_input", "").strip()
+            precio_str = request.form.get("precio_input", "").strip()
+            if campos_vacios(nombre, precio_str):
+                salida_consola = "⚠️ Debes ingresar nombre y precio."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, nombre, float(precio_str))
+
+        elif num_ej == 3:
+            perro = request.form.get("perro_input", "").strip()
+            gato = request.form.get("gato_input", "").strip()
+            vaca = request.form.get("vaca_input", "").strip()
+            if campos_vacios(perro, gato, vaca):
+                salida_consola = "⚠️ Debes ingresar el nombre de los tres animales."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, perro, gato, vaca)
 
     return render_template(
         'ejercicio_detalle.html',
