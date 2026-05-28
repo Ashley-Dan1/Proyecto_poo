@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque15.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
+from app.contenido import COMPENDIO   # ← import del compendio
 
-b15_bp = Blueprint('bloque15', __name__, template_folder='../../templates')
+b12_bp = Blueprint('bloque12', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
@@ -23,7 +24,20 @@ DATOS_RETOS = {
     }
 }
 
-@b15_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
+@b12_bp.route('/concepto')
+def ver_concepto():
+    info = COMPENDIO.get("bloque12", {})
+    return render_template(
+        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        bloque_id="bloque12",
+        bloque_titulo=info.get("titulo", "Bloque 12"),
+        concepto_texto=info.get("concepto", ""),
+        ejemplo_codigo=info.get("ejemplo", ""),
+        datos_retos_nav=list(DATOS_RETOS.keys())
+    )
+ 
+
+@b12_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
@@ -52,8 +66,8 @@ def gestionar_ejercicio(num_ej):
 
     return render_template(
         'ejercicio_detalle.html',
-        bloque_id="bloque15",
-        bloque_titulo="Bloque 15: Funciones de Orden Superior",
+        bloque_id="bloque12",
+        bloque_titulo="Bloque 12: Funciones de Orden Superior",
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
