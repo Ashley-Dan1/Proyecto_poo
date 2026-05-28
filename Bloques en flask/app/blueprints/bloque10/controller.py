@@ -3,6 +3,7 @@ from app.blueprints.bloque10.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b10_bp = Blueprint('bloque10', __name__, template_folder='../../templates')
 
@@ -42,39 +43,22 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    nombre = request.form.get("nombre_input", "").strip()
-                    edad_str = request.form.get("edad_input", "").strip()
-                    ciudad = request.form.get("ciudad_input", "").strip()
-                    if nombre == "" or edad_str == "" or ciudad == "":
-                        print("⚠️ Debes completar nombre, edad y ciudad.")
-                    else:
-                        ejecutar_ejercicio1(nombre, int(edad_str), ciudad)
+        if num_ej in (1, 2):
+            nombre = request.form.get("nombre_input", "").strip()
+            edad_str = request.form.get("edad_input", "").strip()
+            ciudad = request.form.get("ciudad_input", "").strip()
+            if campos_vacios(nombre, edad_str, ciudad):
+                salida_consola = "⚠️ Debes completar nombre, edad y ciudad."
+            else:
+                fn = ejecutar_ejercicio1 if num_ej == 1 else ejecutar_ejercicio2
+                salida_consola = ejecutar_y_capturar(fn, nombre, int(edad_str), ciudad)
 
-                elif num_ej == 2:
-                    nombre = request.form.get("nombre_input", "").strip()
-                    edad_str = request.form.get("edad_input", "").strip()
-                    ciudad = request.form.get("ciudad_input", "").strip()
-                    if nombre == "" or edad_str == "" or ciudad == "":
-                        print("⚠️ Debes completar nombre, edad y ciudad.")
-                    else:
-                        ejecutar_ejercicio2(nombre, int(edad_str), ciudad)
-
-                elif num_ej == 3:
-                    ejecutar_ejercicio3()
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3)
 
     return render_template(
         'ejercicio_detalle.html',
