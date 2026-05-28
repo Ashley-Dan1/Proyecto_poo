@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque06.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b06_bp = Blueprint('bloque06', __name__, template_folder='../../templates')
 
@@ -24,18 +24,19 @@ DATOS_RETOS = {
     }
 }
 
+
 @b06_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque06", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque06",
         bloque_titulo=info.get("titulo", "Bloque 06"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b06_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -51,17 +52,39 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    limite_web = int(request.form.get("limite_input", 10))
-                    ejecutar_ejercicio1(limite_web)
+                    # Nombre único: limite_while_input
+                    limite_str = request.form.get("limite_while_input", "").strip()
+                    if limite_str == "":
+                        print("⚠️ Debes ingresar el límite del conteo.")
+                    else:
+                        limite = int(limite_str)
+                        if limite > 100:
+                            limite = 100
+                            print("ℹ️ Límite ajustado a 100 para evitar salidas muy largas.")
+                        ejecutar_ejercicio1(limite)
+
                 elif num_ej == 2:
-                    frutas_crudas = request.form.get("frutas_input", "manzana, pera, uva")
-                    lista_frutas = [x.strip() for x in frutas_crudas.split(",") if x.strip()]
-                    ejecutar_ejercicio2(lista_frutas)
+                    frutas_crudas = request.form.get("frutas_input", "").strip()
+                    if frutas_crudas == "":
+                        print("⚠️ Debes ingresar al menos una fruta.")
+                    else:
+                        lista_frutas = [x.strip() for x in frutas_crudas.split(",") if x.strip()]
+                        ejecutar_ejercicio2(lista_frutas)
+
                 elif num_ej == 3:
-                    limite_web = int(request.form.get("limite_input", 10))
-                    ejecutar_ejercicio3(limite_web)
+                    # Nombre único: limite_range_input
+                    limite_str = request.form.get("limite_range_input", "").strip()
+                    if limite_str == "":
+                        print("⚠️ Debes ingresar el límite del rango.")
+                    else:
+                        limite = int(limite_str)
+                        if limite > 100:
+                            limite = 100
+                            print("ℹ️ Límite ajustado a 100.")
+                        ejecutar_ejercicio3(limite)
+
             except Exception as e:
-                print(f"❌ Error al procesar bucles: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
