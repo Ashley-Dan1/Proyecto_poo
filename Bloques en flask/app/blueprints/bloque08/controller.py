@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque08.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
+from app.contenido import COMPENDIO   # ← import del compendio
 
 b08_bp = Blueprint('bloque08', __name__, template_folder='../../templates')
 
@@ -22,6 +23,19 @@ DATOS_RETOS = {
         "es_interactivo": False
     }
 }
+
+@b08_bp.route('/concepto')
+def ver_concepto():
+    info = COMPENDIO.get("bloque08", {})
+    return render_template(
+        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        bloque_id="bloque08",
+        bloque_titulo=info.get("titulo", "Bloque 08"),
+        concepto_texto=info.get("concepto", ""),
+        ejemplo_codigo=info.get("ejemplo", ""),
+        datos_retos_nav=list(DATOS_RETOS.keys())
+    )
+ 
 
 @b08_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
