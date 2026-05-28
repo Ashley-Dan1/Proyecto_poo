@@ -3,6 +3,7 @@ from app.blueprints.bloque05.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b05_bp = Blueprint('bloque05', __name__, template_folder='../../templates')
 
@@ -42,40 +43,31 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    numero_str = request.form.get("numero_input", "").strip()
-                    if numero_str == "":
-                        print("⚠️ Debes ingresar un número.")
-                    else:
-                        ejecutar_ejercicio1(int(numero_str))
+        if num_ej == 1:
+            numero_str = request.form.get("numero_input", "").strip()
+            if campos_vacios(numero_str):
+                salida_consola = "⚠️ Debes ingresar un número."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, int(numero_str))
 
-                elif num_ej == 2:
-                    nota_str = request.form.get("nota_input", "").strip()
-                    if nota_str == "":
-                        print("⚠️ Debes ingresar una calificación.")
-                    else:
-                        ejecutar_ejercicio2(float(nota_str))
+        elif num_ej == 2:
+            nota_str = request.form.get("nota_input", "").strip()
+            if campos_vacios(nota_str):
+                salida_consola = "⚠️ Debes ingresar una calificación."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, float(nota_str))
 
-                elif num_ej == 3:
-                    usuario_web = request.form.get("usuario_input", "").strip()
-                    password_web = request.form.get("password_input", "")
-                    if usuario_web == "" or password_web == "":
-                        print("⚠️ Debes ingresar usuario y contraseña.")
-                    else:
-                        ejecutar_ejercicio3(usuario_web, password_web)
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            usuario = request.form.get("usuario_input", "").strip()
+            password = request.form.get("password_input", "")
+            if campos_vacios(usuario, password):
+                salida_consola = "⚠️ Debes ingresar usuario y contraseña."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, usuario, password)
 
     return render_template(
         'ejercicio_detalle.html',
