@@ -24,6 +24,7 @@ DATOS_RETOS = {
     }
 }
 
+
 @b15_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque15", {})
@@ -35,6 +36,7 @@ def ver_concepto():
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
+
 
 @b15_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -49,16 +51,25 @@ def gestionar_ejercicio(num_ej):
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
-                entrada = request.form.get("lista_numeros_input", "1, 2, 3, 4")
-                lista   = [float(x.strip()) for x in entrada.split(",") if x.strip()]
+                # CORREGIDO: sin default silencioso en lista_numeros_input
+                entrada = request.form.get("lista_numeros_input", "").strip()
+                if entrada == "":
+                    print("⚠️ Debes ingresar una lista de números separados por coma.")
+                else:
+                    lista = [float(x.strip()) for x in entrada.split(",") if x.strip()]
+                    if not lista:
+                        print("⚠️ No se detectaron números válidos en la lista.")
+                    elif num_ej == 1:
+                        ejecutar_ejercicio1(lista)
+                    elif num_ej == 2:
+                        umbral_str = request.form.get("umbral_input", "").strip()
+                        if umbral_str == "":
+                            print("⚠️ Debes ingresar el umbral de filtrado.")
+                        else:
+                            ejecutar_ejercicio2(lista, float(umbral_str))
+                    elif num_ej == 3:
+                        ejecutar_ejercicio3(lista)
 
-                if num_ej == 1:
-                    ejecutar_ejercicio1(lista)
-                elif num_ej == 2:
-                    umbral = float(request.form.get("umbral_input", 3))
-                    ejecutar_ejercicio2(lista, umbral)
-                elif num_ej == 3:
-                    ejecutar_ejercicio3(lista)
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
