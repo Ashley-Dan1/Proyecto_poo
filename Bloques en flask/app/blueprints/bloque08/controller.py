@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque08.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b08_bp = Blueprint('bloque08', __name__, template_folder='../../templates')
 
@@ -13,7 +13,7 @@ DATOS_RETOS = {
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Dada la lista [5, 3, 8, 1, 9, 3], calcula e imprime su suma, máximo y mínimo usando funciones integradas.",
+        "enunciado": "Dada la lista [5, 3, 8, 1, 9, 3], calcula e imprime su suma, máximo y mínimo.",
         "codigo_fuente": "nums = [5, 3, 8, 1, 9, 3]\nprint(sum(nums))   # 29\nprint(max(nums))   # 9\nprint(min(nums))   # 1",
         "es_interactivo": True
     },
@@ -24,18 +24,19 @@ DATOS_RETOS = {
     }
 }
 
+
 @b08_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque08", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque08",
         bloque_titulo=info.get("titulo", "Bloque 08"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b08_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -51,17 +52,26 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    elementos = request.form.get("elementos_input", "5, 2, 8")
-                    lista = [float(x.strip()) for x in elementos.split(",") if x.strip()]
-                    ejecutar_ejercicio1(lista)
+                    elementos_str = request.form.get("elementos_input", "").strip()
+                    if elementos_str == "":
+                        print("⚠️ Debes ingresar los elementos.")
+                    else:
+                        lista = [float(x.strip()) for x in elementos_str.split(",") if x.strip()]
+                        ejecutar_ejercicio1(lista)
+
                 elif num_ej == 2:
-                    elementos = request.form.get("elementos_input", "5, 3, 8, 1, 9, 3")
-                    lista = [float(x.strip()) for x in elementos.split(",") if x.strip()]
-                    ejecutar_ejercicio2(lista)
+                    elementos_str = request.form.get("elementos_input", "").strip()
+                    if elementos_str == "":
+                        print("⚠️ Debes ingresar los elementos.")
+                    else:
+                        lista = [float(x.strip()) for x in elementos_str.split(",") if x.strip()]
+                        ejecutar_ejercicio2(lista)
+
                 elif num_ej == 3:
                     ejecutar_ejercicio3()
+
             except Exception as e:
-                print(f"❌ Error al procesar listas: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
