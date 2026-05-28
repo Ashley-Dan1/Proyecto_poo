@@ -1,101 +1,95 @@
 # =====================================================================
-# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 14: FUNCIONES DE ORDEN SUPERIOR
+# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 14: UNPACKING (DESEMPAQUETADO)
 # =====================================================================
-from functools import reduce
 
 # ---------------------------------------------------------------------
-# EJERCICIO 1: Usa map() con una función lambda para elevar al cuadrado una lista.
+# EJERCICIO 1: Desempaqueta (10, 20, 30, 40) → primera, *mitad, ultima.
 # ---------------------------------------------------------------------
-class TransformadorColecciones:
-    def __init__(self, numeros_base: list):
-        self.numeros = numeros_base
+class DesempaquetadorEstructural:
+    def __init__(self, tupla_datos: tuple):
+        self.datos = tupla_datos
 
-    def elevar_elementos_al_cuadrado(self):
-        print("🧪 TRANSFORMACIÓN DE DATOS CON map() Y LAMBDA")
+    def ejecutar_extraccion(self):
+        print("📦 DESEMPAQUETADO CON OPERADOR COMODÍN (*)")
         print("--------------------------------------------------")
-        print(f"Lista de entrada: {self.numeros}")
-        
-        # map() aplica la función anónima a cada elemento de la colección iterable
-        resultado_iterador = map(lambda x: x ** 2, self.numeros)
-        lista_final = list(resultado_iterador)
-        
-        print(f"➡️ Lista transformada al cuadrado: {lista_final}")
-        return lista_final
+        print(f"Tupla de origen: {self.datos}")
+
+        if len(self.datos) < 2:
+            print("❌ Se necesitan al menos 2 elementos para el unpacking.")
+            return
+
+        primera, *mitad, ultima = self.datos
+        print(f"🥇 Primera posición (primera): {primera}")
+        print(f"🧱 Segmento medio (*mitad)   : {list(mitad)}")
+        print(f"🏁 Última posición (ultima)  : {ultima}")
+        print("\n💡 El operador * captura todos los elementos intermedios en una lista.")
 
 
-class GestorTransformacion:
+class GestorDesempaquetado:
     @staticmethod
-    def ejecutar_demostracion(lista_web: list):
-        transformador = TransformadorColecciones(lista_web)
-        transformador.elevar_elementos_al_cuadrado()
+    def ejecutar_demostracion(tupla_entrada: tuple):
+        DesempaquetadorEstructural(tupla_entrada).ejecutar_extraccion()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 2: Usa filter() para obtener solo los números mayores a 10 de una lista.
+# EJERCICIO 2: Usa *lista para pasar [2, 3, 4] a multiplicar(a, b, c).
 # ---------------------------------------------------------------------
-class FiltroColecciones:
-    def __init__(self, numeros_base: list):
-        self.numeros = numeros_base
+class OperadorMultiplicacion:
+    def multiplicar(self, a: float, b: float, c: float):
+        resultado = a * b * c
+        print(f"  Argumentos posicionales → a={a}, b={b}, c={c}")
+        print(f"  Resultado: {a} × {b} × {c} = {resultado}")
+        return resultado
 
-    def filtrar_mayores_que_diez(self, umbral: float):
-        print(f"🔍 FILTRADO DE ELEMENTOS CON filter() (Umbral: {umbral})")
+
+class GestorInyeccionArgumentos:
+    @staticmethod
+    def ejecutar_calculo(lista_factores: list):
+        print("🧮 DESEMPAQUETADO EN FUNCIONES — *lista como argumentos")
         print("--------------------------------------------------")
-        print(f"Lista de entrada: {self.numeros}")
-        
-        # filter() conserva únicamente los elementos donde la función lambda retorna True
-        resultado_filtro = filter(lambda x: x > umbral, self.numeros)
-        lista_filtrada = list(resultado_filtro)
-        
-        print(f"➡️ Elementos que superan el umbral: {lista_filtrada}")
-        return lista_filtrada
-
-
-class GestorFiltrado:
-    @staticmethod
-    def ejecutar_calculo(lista_base: list, valor_umbral: float):
-        filtrador = FiltroColecciones(lista_base)
-        filtrador.filtrar_mayores_que_diez(valor_umbral)
+        print(f"Lista original: {lista_factores}")
+        print("Llamando multiplicar(*lista_factores):\n")
+        calculador = OperadorMultiplicacion()
+        calculador.multiplicar(*lista_factores)
+        print("\n💡 El operador * desempaqueta la lista y la pasa como argumentos individuales.")
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 3: Usa reduce() para multiplicar todos los elementos de una lista.
+# EJERCICIO 3: Combina dos diccionarios con ** sin modificar los originales.
 # ---------------------------------------------------------------------
-class ReductorColecciones:
-    def __init__(self, numeros_base: list):
-        self.numeros = numeros_base
+class FusionadorDiccionarios:
+    def __init__(self, diccionario_a: dict, diccionario_b: dict):
+        self.dict_a = diccionario_a
+        self.dict_b = diccionario_b
 
-    def calcular_producto_acumulado(self):
-        print("🧮 REDUCCIÓN DE ESTRUCTURAS CON reduce()")
+    def mezclar_estructuras(self):
+        print("🗺️ DESEMPAQUETADO DE DICTS — Fusión con **")
         print("--------------------------------------------------")
-        print(f"Lista de entrada: {self.numeros}")
-        
-        if not self.numeros:
-            print("⚠️ La lista está vacía. No se puede realizar la reducción acumulada.")
-            return 0
-            
-        # reduce() aplica la función de dos argumentos de forma acumulativa de izquierda a derecha
-        producto_total = reduce(lambda acumulador, elemento: acumulador * elemento, self.numeros)
-        
-        print(f"➡️ Producto acumulado final de todos los elementos: {producto_total}")
-        return producto_total
+        print(f"Diccionario A (original): {self.dict_a}")
+        print(f"Diccionario B (original): {self.dict_b}")
+
+        diccionario_combinado = {**self.dict_a, **self.dict_b}
+
+        print(f"\nResultado combinado : {diccionario_combinado}")
+        print(f"\n🛡️ Verificación A después de combinar: {self.dict_a}  ← sin cambios")
+        print(f"🛡️ Verificación B después de combinar: {self.dict_b}  ← sin cambios")
+        print("\n💡 ** desempaqueta el diccionario en pares clave:valor dentro de la expresión literal.")
 
 
-class GestorReduccion:
+class GestorFusionMapas:
     @staticmethod
-    def ejecutar_analisis(lista_base: list):
-        reductor = ReductorColecciones(lista_base)
-        reductor.calcular_producto_acumulado()
+    def ejecutar_analisis(mapa_uno: dict, mapa_dos: dict):
+        FusionadorDiccionarios(mapa_uno, mapa_dos).mezclar_estructuras()
 
 
 # =====================================================================
-# FUNCIONES DISPARADORAS (Conectan con el controlador de Flask)
+# FUNCIONES DISPARADORAS
 # =====================================================================
+def ejecutar_ejercicio1(tupla_valores):
+    GestorDesempaquetado.ejecutar_demostracion(tupla_valores)
 
-def ejecutar_ejercicio1(lista_numeros):
-    GestorTransformacion.ejecutar_demostracion(lista_numeros)
+def ejecutar_ejercicio2(lista_valores):
+    GestorInyeccionArgumentos.ejecutar_calculo(lista_valores)
 
-def ejecutar_ejercicio2(lista_numeros, umbral):
-    GestorFiltrado.ejecutar_calculo(lista_numeros, umbral)
-
-def ejecutar_ejercicio3(lista_numeros):
-    GestorReduccion.ejecutar_analisis(lista_numeros)
+def ejecutar_ejercicio3(mapa_uno, mapa_dos):
+    GestorFusionMapas.ejecutar_analisis(mapa_uno, mapa_dos)
