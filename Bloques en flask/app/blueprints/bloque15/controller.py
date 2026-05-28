@@ -2,24 +2,24 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque15.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b15_bp = Blueprint('bloque15', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
-        "enunciado": "Utiliza List Comprehension para generar dinámicamente una lista compacta que contenga los cuadrados de una secuencia numérica consecutiva.",
-        "codigo_fuente": "cuadrados = [x**2 for x in range(1, 6)]\nprint(cuadrados)",
+        "enunciado": "Usa map() para incrementar en 1 cada elemento de una lista. Ejemplo: [2, 4, 6] → [3, 5, 7].",
+        "codigo_fuente": "numeros = [2, 4, 6]\nresultado = list(map(lambda x: x + 1, numeros))\nprint(resultado)  # [3, 5, 7]",
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Filtra de manera elegante una lista de números enteros para conservar únicamente los valores que sean pares mediante una cláusula inline.",
-        "codigo_fuente": "numeros = [1, 2, 3, 4, 5, 6]\npares = [x for x in numeros if x % 2 == 0]\nprint(pares)",
+        "enunciado": "Usa filter() para obtener los elementos mayores a un umbral. Ejemplo con umbral=3: [1,2,3,4,5] → [4, 5].",
+        "codigo_fuente": "numeros = [1, 2, 3, 4, 5]\nresultado = list(filter(lambda x: x > 3, numeros))\nprint(resultado)  # [4, 5]",
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Toma un conjunto de palabras en formato de lista y procésalas utilizando una única línea de código para transformar todos los caracteres a letras mayúsculas.",
-        "codigo_fuente": "palabras = ['python', 'clase', 'web']\nmayusculas = [p.upper() for p in palabras]\nprint(mayusculas)",
+        "enunciado": "Usa reduce() para multiplicar todos los elementos de una lista. Ejemplo: [1, 2, 3, 4] → 24.",
+        "codigo_fuente": "from functools import reduce\nnumeros = [1, 2, 3, 4]\nresultado = reduce(lambda x, y: x * y, numeros)\nprint(resultado)  # 24",
         "es_interactivo": True
     }
 }
@@ -28,49 +28,45 @@ DATOS_RETOS = {
 def ver_concepto():
     info = COMPENDIO.get("bloque15", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque15",
         bloque_titulo=info.get("titulo", "Bloque 15"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
 
 @b15_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-        
+
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io
-        import contextlib
-        
+        import io, contextlib
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
+                entrada = request.form.get("lista_numeros_input", "1, 2, 3, 4")
+                lista   = [float(x.strip()) for x in entrada.split(",") if x.strip()]
+
                 if num_ej == 1:
-                    limite_web = int(request.form.get("limite_input", 5))
-                    ejecutar_ejercicio1(limite_web)
+                    ejecutar_ejercicio1(lista)
                 elif num_ej == 2:
-                    entrada_numerica = request.form.get("lista_numeros_input", "1, 2, 3, 4, 5, 6, 7, 8, 9, 10")
-                    lista_numeros = [int(n.strip()) for n in entrada_numerica.split(",") if n.strip().isdigit() or (n.strip().startswith('-') and n.strip()[1:].isdigit())]
-                    ejecutar_ejercicio2(lista_numeros)
+                    umbral = float(request.form.get("umbral_input", 3))
+                    ejecutar_ejercicio2(lista, umbral)
                 elif num_ej == 3:
-                    entrada_texto = request.form.get("lista_palabras_input", "hola, mundo, programación, objetos")
-                    lista_palabras = [p.strip() for p in entrada_texto.split(",") if p.strip()]
-                    ejecutar_ejercicio3(lista_palabras)
+                    ejecutar_ejercicio3(lista)
             except Exception as e:
-                print(f"❌ Error al evaluar expresiones de comprensión de listas: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
         'ejercicio_detalle.html',
         bloque_id="bloque15",
-        bloque_titulo="Bloque 15: List Comprehensions",
+        bloque_titulo="Bloque 15: Funciones de Orden Superior",
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
