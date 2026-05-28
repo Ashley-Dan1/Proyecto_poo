@@ -2,24 +2,24 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque13.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b13_bp = Blueprint('bloque13', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
-        "enunciado": "Desempaqueta dinámicamente una estructura de 4 elementos asignando explícitamente el primero, el último y agrupando los intermedios en una sublista.",
-        "codigo_fuente": "primera, *mitad, ultima = (10, 20, 30, 40)\nprint(primera, mitad, ultima)",
+        "enunciado": "Crea un decorador que imprima 'Iniciando...' antes de ejecutar la función decorada y 'Ejecución completada.' después.",
+        "codigo_fuente": "def decorador_inicio(f):\n    def wrapper(*args, **kwargs):\n        print('Iniciando...')\n        resultado = f(*args, **kwargs)\n        print('Ejecución completada.')\n        return resultado\n    return wrapper\n\n@decorador_inicio\ndef mi_funcion():\n    print('Ejecutando...')",
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Define una función de tres parámetros posicionales y llámala desempaquetando los datos almacenados dentro de una lista ordinaria mediante el operador asterisco.",
-        "codigo_fuente": "valores = [2, 3, 4]\nmultiplicar(*valores)",
+        "enunciado": "Crea un decorador que verifique que el argumento sea positivo antes de calcular su cuadrado. Si es negativo, no ejecuta la función.",
+        "codigo_fuente": "def validar_positivo(f):\n    def wrapper(n):\n        if n < 0:\n            print('No es positivo')\n            return None\n        return f(n)\n    return wrapper\n\n@validar_positivo\ndef cuadrado(n):\n    return n ** 2",
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Une el contenido de dos diccionarios independientes en un nuevo mapa utilizando el operador de doble asterisco, asegurando no alterar las fuentes.",
-        "codigo_fuente": "combinado = {**dict1, **dict2}",
+        "enunciado": "Analiza: @log aplicado a suma(a, b). ¿Qué imprime suma(2, 3)? El decorador @log debe imprimir 'Llamando función...' y el retorno.",
+        "codigo_fuente": "def log(f):\n    def wrapper(*args, **kwargs):\n        print(f'Llamando función {f.__name__} con args={args}')\n        resultado = f(*args, **kwargs)\n        print(f'Retorno: {resultado}')\n        return resultado\n    return wrapper\n\n@log\ndef suma(a, b):\n    return a + b\n\nsuma(2, 3)",
         "es_interactivo": True
     }
 }
@@ -28,58 +28,45 @@ DATOS_RETOS = {
 def ver_concepto():
     info = COMPENDIO.get("bloque13", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque13",
         bloque_titulo=info.get("titulo", "Bloque 13"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
 
 @b13_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-        
+
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io
-        import contextlib
-        
+        import io, contextlib
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    datos_crudos = request.form.get("tupla_input", "10, 20, 30, 40")
-                    tupla_valores = tuple(float(x.strip()) for x in datos_crudos.split(",") if x.strip())
-                    ejecutar_ejercicio1(tupla_valores)
+                    nombre_web = request.form.get("nombre_funcion_input", "procesar_datos")
+                    ejecutar_ejercicio1(nombre_web)
                 elif num_ej == 2:
-                    lista_cruda = request.form.get("lista_input", "2, 3, 4")
-                    lista_valores = [float(x.strip()) for x in lista_cruda.split(",") if x.strip()][:3]
-                    # Rellenamos por si el usuario manda menos de 3 parámetros
-                    while len(lista_valores) < 3:
-                        lista_valores.append(1.0)
-                    ejecutar_ejercicio2(lista_valores)
+                    numero_web = float(request.form.get("numero_input", 5))
+                    ejecutar_ejercicio2(numero_web)
                 elif num_ej == 3:
-                    llave1 = request.form.get("llave1", "a")
-                    valor1 = request.form.get("valor1", "10")
-                    llave2 = request.form.get("llave2", "b")
-                    valor2 = request.form.get("valor2", "20")
-                    
-                    dict_uno = {llave1: valor1}
-                    dict_dos = {llave2: valor2}
-                    ejecutar_ejercicio3(dict_uno, dict_dos)
+                    a_web = float(request.form.get("valor_a_input", 2))
+                    b_web = float(request.form.get("valor_b_input", 3))
+                    ejecutar_ejercicio3(a_web, b_web)
             except Exception as e:
-                print(f"❌ Error en los flujos de desempaquetado: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
         'ejercicio_detalle.html',
         bloque_id="bloque13",
-        bloque_titulo="Bloque 13: Unpacking (Desempaquetado)",
+        bloque_titulo="Bloque 13: Decoradores",
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
