@@ -3,6 +3,7 @@ from app.blueprints.bloque08.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b08_bp = Blueprint('bloque08', __name__, template_folder='../../templates')
 
@@ -42,37 +43,28 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    elementos_str = request.form.get("elementos_input", "").strip()
-                    if elementos_str == "":
-                        print("⚠️ Debes ingresar los elementos.")
-                    else:
-                        lista = [float(x.strip()) for x in elementos_str.split(",") if x.strip()]
-                        ejecutar_ejercicio1(lista)
+        if num_ej == 1:
+            elementos_str = request.form.get("elementos_input", "").strip()
+            if campos_vacios(elementos_str):
+                salida_consola = "⚠️ Debes ingresar los elementos."
+            else:
+                lista = [float(x.strip()) for x in elementos_str.split(",") if x.strip()]
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, lista)
 
-                elif num_ej == 2:
-                    elementos_str = request.form.get("elementos_input", "").strip()
-                    if elementos_str == "":
-                        print("⚠️ Debes ingresar los elementos.")
-                    else:
-                        lista = [float(x.strip()) for x in elementos_str.split(",") if x.strip()]
-                        ejecutar_ejercicio2(lista)
+        elif num_ej == 2:
+            elementos_str = request.form.get("elementos_input", "").strip()
+            if campos_vacios(elementos_str):
+                salida_consola = "⚠️ Debes ingresar los elementos."
+            else:
+                lista = [float(x.strip()) for x in elementos_str.split(",") if x.strip()]
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, lista)
 
-                elif num_ej == 3:
-                    ejecutar_ejercicio3()
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3)
 
     return render_template(
         'ejercicio_detalle.html',
