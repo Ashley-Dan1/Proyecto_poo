@@ -1,44 +1,44 @@
 from flask import Blueprint, render_template, request
-from app.blueprints.bloque06.models import (
+from app.blueprints.bloque04.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
 
-b06_bp = Blueprint('bloque06', __name__, template_folder='../../templates')
+b04_bp = Blueprint('bloque04', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
-        "enunciado": "Imprime los números del 1 al 10 usando un bucle while.",
-        "codigo_fuente": "contador = 1\nwhile contador <= 10:\n    print(contador)\n    contador += 1",
+        "enunciado": "Solicita el nombre y la edad del usuario, y muestra un mensaje personalizado utilizando f-strings.",
+        "codigo_fuente": "nombre = input('Ingrese su nombre: ')\nedad = int(input('Ingrese su edad: '))\nprint(f'Nombre: {nombre}, Edad: {edad}')",
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Recorre una lista de frutas usando enumerate() e imprime el índice y el nombre de cada una.",
-        "codigo_fuente": "frutas = ['manzana', 'pera', 'uva']\nfor indice, fruta in enumerate(frutas):\n    print(indice, fruta)",
+        "enunciado": "Lee dos números desde el teclado, calcula su suma y su promedio, e imprime ambos resultados aplicando el casting correspondiente.",
+        "codigo_fuente": "num1 = float(input())\nnum2 = float(input())\nsuma = num1 + num2\npromedio = suma / 2",
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Crea una lista con los cuadrados de los números pares del 1 al 10 usando list comprehension. Resultado esperado: [4, 16, 36, 64, 100]",
-        "codigo_fuente": "cuadrados_pares = [x**2 for x in range(1, 11) if x % 2 == 0]\nprint(cuadrados_pares)  # [4, 16, 36, 64, 100]",
+        "enunciado": "Sin convertir la entrada del usuario (dejándola como str), intenta sumar el texto '5'. Explica qué sucede.",
+        "codigo_fuente": "numero = input('Número: ')  # Es str\nprint(numero + '5')  # Se concatenan como texto",
         "es_interactivo": True
     }
 }
 
 
-@b06_bp.route('/concepto')
+@b04_bp.route('/concepto')
 def ver_concepto():
-    info = COMPENDIO.get("bloque06", {})
+    info = COMPENDIO.get("bloque04", {})
     return render_template(
         'ejercicio_concepto.html',
-        bloque_id="bloque06",
-        bloque_titulo=info.get("titulo", "Bloque 06"),
+        bloque_id="bloque04",
+        bloque_titulo=info.get("titulo", "Bloque 04"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
 
 
-@b06_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
+@b04_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
@@ -52,36 +52,28 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    # CORREGIDO: nombre alineado con formularios.html → 'limite_input'
-                    limite_str = request.form.get("limite_input", "").strip()
-                    if limite_str == "":
-                        print("⚠️ Debes ingresar el límite del conteo.")
+                    nombre_web = request.form.get("nombre_input", "").strip()
+                    edad_str = request.form.get("edad_input", "").strip()
+                    if nombre_web == "" or edad_str == "":
+                        print("⚠️ Debes ingresar nombre y edad.")
                     else:
-                        limite = int(limite_str)
-                        if limite > 100:
-                            limite = 100
-                            print("ℹ️ Límite ajustado a 100 para evitar salidas muy largas.")
-                        ejecutar_ejercicio1(limite)
+                        ejecutar_ejercicio1(nombre_web, int(edad_str))
 
                 elif num_ej == 2:
-                    frutas_crudas = request.form.get("frutas_input", "").strip()
-                    if frutas_crudas == "":
-                        print("⚠️ Debes ingresar al menos una fruta.")
+                    n1_str = request.form.get("num1_input", "").strip()
+                    n2_str = request.form.get("num2_input", "").strip()
+                    if n1_str == "" or n2_str == "":
+                        print("⚠️ Debes ingresar ambos números.")
                     else:
-                        lista_frutas = [x.strip() for x in frutas_crudas.split(",") if x.strip()]
-                        ejecutar_ejercicio2(lista_frutas)
+                        ejecutar_ejercicio2(float(n1_str), float(n2_str))
 
                 elif num_ej == 3:
-                    # CORREGIDO: nombre alineado con formularios.html → 'limite_input'
-                    limite_str = request.form.get("limite_input", "").strip()
-                    if limite_str == "":
-                        print("⚠️ Debes ingresar el límite del rango.")
+                    # Campo de texto libre — se pasa tal cual como string (sin casting)
+                    entrada_web = request.form.get("entrada_cruda_input", "").strip()
+                    if entrada_web == "":
+                        print("⚠️ Debes ingresar un valor en el campo.")
                     else:
-                        limite = int(limite_str)
-                        if limite > 100:
-                            limite = 100
-                            print("ℹ️ Límite ajustado a 100.")
-                        ejecutar_ejercicio3(limite)
+                        ejecutar_ejercicio3(entrada_web)
 
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
@@ -89,8 +81,8 @@ def gestionar_ejercicio(num_ej):
 
     return render_template(
         'ejercicio_detalle.html',
-        bloque_id="bloque06",
-        bloque_titulo="Bloque 06: Bucles (for / while)",
+        bloque_id="bloque04",
+        bloque_titulo="Bloque 04: Entrada y Salida (input/print)",
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
