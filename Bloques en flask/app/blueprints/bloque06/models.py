@@ -2,9 +2,6 @@
 # CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 6: BUCLES (for / while)
 # =====================================================================
 
-# ---------------------------------------------------------------------
-# EJERCICIO 1: Imprime los números del 1 al 10 con while.
-# ---------------------------------------------------------------------
 class ContadorWhile:
     def __init__(self, limite: int):
         self.limite = limite
@@ -25,9 +22,6 @@ class GestorContadorWhile:
         ContadorWhile(limite).contar()
 
 
-# ---------------------------------------------------------------------
-# EJERCICIO 2: Recorre lista de frutas con enumerate() → índice y nombre.
-# ---------------------------------------------------------------------
 class RecorredorFrutas:
     def __init__(self, frutas: list):
         self.frutas = frutas
@@ -47,9 +41,6 @@ class GestorFrutas:
         RecorredorFrutas(lista_frutas).recorrer_con_enumerate()
 
 
-# ---------------------------------------------------------------------
-# EJERCICIO 3: Cuadrados de pares del 1 al N con list comprehension.
-# ---------------------------------------------------------------------
 class GeneradorCuadradosPares:
     def __init__(self, limite: int):
         self.limite = limite
@@ -80,10 +71,3 @@ def ejecutar_ejercicio2(lista_frutas):
 
 def ejecutar_ejercicio3(limite):
     GestorCuadradosPares.ejecutar_demostracion(limite)
-
-
-def ejecutar_ejercicio2(inicio):
-    GestorContadorWhile.ejecutar_calculo(inicio)
-
-def ejecutar_ejercicio3(limite):
-    GestorSumadorPares.ejecutar_analisis(limite)
