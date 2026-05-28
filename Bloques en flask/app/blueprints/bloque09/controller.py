@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque09.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b09_bp = Blueprint('bloque09', __name__, template_folder='../../templates')
 
@@ -24,18 +24,19 @@ DATOS_RETOS = {
     }
 }
 
+
 @b09_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque09", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque09",
         bloque_titulo=info.get("titulo", "Bloque 09"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b09_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -51,23 +52,41 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    elementos = request.form.get("tupla_input", "1, 2, 3, 4")
-                    tupla = tuple(x.strip() for x in elementos.split(",") if x.strip())
-                    ejecutar_ejercicio1(tupla)
+                    elementos_str = request.form.get("tupla_input", "").strip()
+                    if elementos_str == "":
+                        print("⚠️ Debes ingresar los elementos de la tupla.")
+                    else:
+                        tupla = tuple(x.strip() for x in elementos_str.split(",") if x.strip())
+                        ejecutar_ejercicio1(tupla)
+
                 elif num_ej == 2:
-                    elementos = request.form.get("tupla_input", "100, 200, 300, 400")
-                    tupla = tuple(int(x.strip()) for x in elementos.split(",") if x.strip())
-                    ejecutar_ejercicio2(tupla)
+                    elementos_str = request.form.get("tupla_input", "").strip()
+                    if elementos_str == "":
+                        print("⚠️ Debes ingresar los valores numéricos.")
+                    else:
+                        tupla = tuple(int(x.strip()) for x in elementos_str.split(",") if x.strip())
+                        if len(tupla) < 2:
+                            print("⚠️ Necesitas al menos 2 elementos para el unpacking.")
+                        else:
+                            ejecutar_ejercicio2(tupla)
+
                 elif num_ej == 3:
-                    pares = request.form.get("coordenadas_input", "1,2 | 3,4 | 5,6")
-                    coordenadas = []
-                    for par in pares.split("|"):
-                        partes = par.strip().split(",")
-                        if len(partes) == 2:
-                            coordenadas.append((partes[0].strip(), partes[1].strip()))
-                    ejecutar_ejercicio3(coordenadas)
+                    pares_str = request.form.get("coordenadas_input", "").strip()
+                    if pares_str == "":
+                        print("⚠️ Debes ingresar las coordenadas.")
+                    else:
+                        coordenadas = []
+                        for par in pares_str.split("|"):
+                            partes = par.strip().split(",")
+                            if len(partes) == 2:
+                                coordenadas.append((partes[0].strip(), partes[1].strip()))
+                        if not coordenadas:
+                            print("⚠️ Formato inválido. Usa: 1,2 | 3,4 | 5,6")
+                        else:
+                            ejecutar_ejercicio3(coordenadas)
+
             except Exception as e:
-                print(f"❌ Error al procesar tuplas: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
