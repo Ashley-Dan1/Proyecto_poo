@@ -3,6 +3,7 @@ from app.blueprints.bloque07.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b07_bp = Blueprint('bloque07', __name__, template_folder='../../templates')
 
@@ -42,47 +43,37 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    num_str = request.form.get("numero_input", "").strip()
-                    if num_str == "":
-                        print("⚠️ Debes ingresar un número.")
-                    else:
-                        ejecutar_ejercicio1(float(num_str))
+        if num_ej == 1:
+            num_str = request.form.get("numero_input", "").strip()
+            if campos_vacios(num_str):
+                salida_consola = "⚠️ Debes ingresar un número."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, float(num_str))
 
-                elif num_ej == 2:
-                    args_crudos = request.form.get("args_input", "").strip()
-                    if args_crudos == "":
-                        print("⚠️ Debes ingresar al menos un número.")
-                    else:
-                        lista = [float(x.strip()) for x in args_crudos.split(",") if x.strip()]
-                        ejecutar_ejercicio2(lista)
+        elif num_ej == 2:
+            args_crudos = request.form.get("args_input", "").strip()
+            if campos_vacios(args_crudos):
+                salida_consola = "⚠️ Debes ingresar al menos un número."
+            else:
+                lista = [float(x.strip()) for x in args_crudos.split(",") if x.strip()]
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, lista)
 
-                elif num_ej == 3:
-                    n_str = request.form.get("factorial_input", "").strip()
-                    if n_str == "":
-                        print("⚠️ Debes ingresar un número entre 0 y 12.")
-                    else:
-                        n_web = int(n_str)
-                        # Validación server-side: limitar recursión profunda
-                        if n_web < 0:
-                            print("⚠️ El factorial no está definido para números negativos.")
-                        elif n_web > 12:
-                            print("⚠️ Por seguridad, el límite máximo es 12.")
-                        else:
-                            ejecutar_ejercicio3(n_web)
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            n_str = request.form.get("factorial_input", "").strip()
+            if campos_vacios(n_str):
+                salida_consola = "⚠️ Debes ingresar un número entre 0 y 12."
+            else:
+                n = int(n_str)
+                if n < 0:
+                    salida_consola = "⚠️ El factorial no está definido para números negativos."
+                elif n > 12:
+                    salida_consola = "⚠️ Por seguridad, el límite máximo es 12."
+                else:
+                    salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, n)
 
     return render_template(
         'ejercicio_detalle.html',
