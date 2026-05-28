@@ -3,6 +3,7 @@ from app.blueprints.bloque01.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3, ejecutar_ejercicio4
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b01_bp = Blueprint('bloque01', __name__, template_folder='../../templates')
 
@@ -47,44 +48,34 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    ejecutar_ejercicio1()
+        if num_ej == 1:
+            salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1)
 
-                elif num_ej == 2:
-                    precio_str = request.form.get("precio_input", "").strip()
-                    if precio_str == "":
-                        print("⚠️ Debes ingresar un precio en el campo interactivo.")
-                    else:
-                        precio_web = float(precio_str)
-                        ejecutar_ejercicio2(precio_web)
+        elif num_ej == 2:
+            precio_str = request.form.get("precio_input", "").strip()
+            if campos_vacios(precio_str):
+                salida_consola = "⚠️ Debes ingresar un precio en el campo interactivo."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, float(precio_str))
 
-                elif num_ej == 3:
-                    nombre_web = request.form.get("nombre_input", "").strip()
-                    if nombre_web == "":
-                        print("⚠️ Debes ingresar un nombre en el campo interactivo.")
-                    else:
-                        modo_notas = request.form.get("modo_notas") == "con_notas"
-                        ejecutar_ejercicio3(nombre_web, modo_notas)
+        elif num_ej == 3:
+            nombre = request.form.get("nombre_input", "").strip()
+            if campos_vacios(nombre):
+                salida_consola = "⚠️ Debes ingresar un nombre en el campo interactivo."
+            else:
+                con_notas = request.form.get("modo_notas") == "con_notas"
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, nombre, con_notas)
 
-                elif num_ej == 4:
-                    nombre_web = request.form.get("nombre_dict_input", "").strip()
-                    if nombre_web == "":
-                        print("⚠️ Debes ingresar un nombre en el campo interactivo.")
-                    else:
-                        ejecutar_ejercicio4(nombre_web)
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 4:
+            nombre = request.form.get("nombre_dict_input", "").strip()
+            if campos_vacios(nombre):
+                salida_consola = "⚠️ Debes ingresar un nombre en el campo interactivo."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio4, nombre)
 
     return render_template(
         'ejercicio_detalle.html',
