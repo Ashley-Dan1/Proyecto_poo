@@ -1,73 +1,85 @@
 from flask import Blueprint, render_template, request
-from app.blueprints.bloque15.models import (
+from app.blueprints.bloque13.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO   # ← import del compendio
 
-b12_bp = Blueprint('bloque12', __name__, template_folder='../../templates')
+b13_bp = Blueprint('bloque13', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
-        "enunciado": "Usa map() para incrementar en 1 cada elemento de una lista. Ejemplo: [2, 4, 6] → [3, 5, 7].",
-        "codigo_fuente": "numeros = [2, 4, 6]\nresultado = list(map(lambda x: x + 1, numeros))\nprint(resultado)  # [3, 5, 7]",
+        "enunciado": "Desempaqueta dinámicamente una estructura de 4 elementos asignando explícitamente el primero, el último y agrupando los intermedios en una sublista.",
+        "codigo_fuente": "primera, *mitad, ultima = (10, 20, 30, 40)\nprint(primera, mitad, ultima)",
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Usa filter() para obtener los elementos mayores a 3 de una lista. Ejemplo: [1,2,3,4,5] → [4, 5].",
-        "codigo_fuente": "numeros = [1, 2, 3, 4, 5]\nresultado = list(filter(lambda x: x > 3, numeros))\nprint(resultado)  # [4, 5]",
+        "enunciado": "Define una función de tres parámetros posicionales y llámala desempaquetando los datos almacenados dentro de una lista ordinaria mediante el operador asterisco.",
+        "codigo_fuente": "valores = [2, 3, 4]\nmultiplicar(*valores)",
         "es_interactivo": True
     },
     3: {
-        "enunciado": "Usa reduce() para multiplicar todos los elementos de una lista. Ejemplo: [1,2,3,4] → 24.",
-        "codigo_fuente": "from functools import reduce\nnumeros = [1, 2, 3, 4]\nresultado = reduce(lambda x, y: x * y, numeros)\nprint(resultado)  # 24",
+        "enunciado": "Une el contenido de dos diccionarios independientes en un nuevo mapa utilizando el operador de doble asterisco, asegurando no alterar las fuentes.",
+        "codigo_fuente": "combinado = {**dict1, **dict2}",
         "es_interactivo": True
     }
 }
 
-@b12_bp.route('/concepto')
+@b13_bp.route('/concepto')
 def ver_concepto():
-    info = COMPENDIO.get("bloque12", {})
+    info = COMPENDIO.get("bloque13", {})
     return render_template(
         'ejercicio_concepto.html',          # nombre corregido (sin typo)
-        bloque_id="bloque12",
-        bloque_titulo=info.get("titulo", "Bloque 12"),
+        bloque_id="bloque13",
+        bloque_titulo=info.get("titulo", "Bloque 13"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
  
 
-@b12_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
+@b13_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
+        
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
+        import io
+        import contextlib
+        
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
-                entrada = request.form.get("lista_numeros_input", "1, 2, 3, 4")
-                lista   = [float(x.strip()) for x in entrada.split(",") if x.strip()]
-
                 if num_ej == 1:
-                    ejecutar_ejercicio1(lista)
+                    datos_crudos = request.form.get("tupla_input", "10, 20, 30, 40")
+                    tupla_valores = tuple(float(x.strip()) for x in datos_crudos.split(",") if x.strip())
+                    ejecutar_ejercicio1(tupla_valores)
                 elif num_ej == 2:
-                    umbral = float(request.form.get("umbral_input", 3))
-                    ejecutar_ejercicio2(lista, umbral)
+                    lista_cruda = request.form.get("lista_input", "2, 3, 4")
+                    lista_valores = [float(x.strip()) for x in lista_cruda.split(",") if x.strip()][:3]
+                    # Rellenamos por si el usuario manda menos de 3 parámetros
+                    while len(lista_valores) < 3:
+                        lista_valores.append(1.0)
+                    ejecutar_ejercicio2(lista_valores)
                 elif num_ej == 3:
-                    ejecutar_ejercicio3(lista)
+                    llave1 = request.form.get("llave1", "a")
+                    valor1 = request.form.get("valor1", "10")
+                    llave2 = request.form.get("llave2", "b")
+                    valor2 = request.form.get("valor2", "20")
+                    
+                    dict_uno = {llave1: valor1}
+                    dict_dos = {llave2: valor2}
+                    ejecutar_ejercicio3(dict_uno, dict_dos)
             except Exception as e:
-                print(f"❌ Error: {str(e)}")
+                print(f"❌ Error en los flujos de desempaquetado: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
         'ejercicio_detalle.html',
-        bloque_id="bloque12",
-        bloque_titulo="Bloque 12: Funciones de Orden Superior",
+        bloque_id="bloque13",
+        bloque_titulo="Bloque 13: Unpacking (Desempaquetado)",
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
