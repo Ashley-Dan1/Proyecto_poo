@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque01.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3, ejecutar_ejercicio4
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b01_bp = Blueprint('bloque01', __name__, template_folder='../../templates')
 
@@ -29,52 +29,62 @@ DATOS_RETOS = {
     }
 }
 
+
 @b01_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque01", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque01",
         bloque_titulo=info.get("titulo", "Bloque 01"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b01_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-        
+
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io
-        import contextlib
-        
+        import io, contextlib
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
-                # Validamos y enrutamos según el ejercicio con sus inputs web específicos
                 if num_ej == 1:
                     ejecutar_ejercicio1()
+
                 elif num_ej == 2:
-                    # Input interactivo: Precio enviado por el estudiante
-                    precio_web = float(request.form.get("precio_input", 900))
-                    ejecutar_ejercicio2(precio_web)
+                    # Validación server-side: campo obligatorio
+                    precio_str = request.form.get("precio_input", "").strip()
+                    if precio_str == "":
+                        print("⚠️ Debes ingresar un precio en el campo interactivo.")
+                    else:
+                        precio_web = float(precio_str)
+                        ejecutar_ejercicio2(precio_web)
+
                 elif num_ej == 3:
-                    # Inputs interactivos: Nombre y opción de notas vacías
-                    nombre_web = request.form.get("nombre_input", "Alejandro")
-                    modo_notas = request.form.get("modo_notas") == "con_notas"
-                    ejecutar_ejercicio3(nombre_web, modo_notas)
+                    nombre_web = request.form.get("nombre_input", "").strip()
+                    if nombre_web == "":
+                        print("⚠️ Debes ingresar un nombre en el campo interactivo.")
+                    else:
+                        modo_notas = request.form.get("modo_notas") == "con_notas"
+                        ejecutar_ejercicio3(nombre_web, modo_notas)
+
                 elif num_ej == 4:
-                    # Input interactivo: Nombre para el mapeo del diccionario
-                    nombre_web = request.form.get("nombre_dict_input", "Gabriela")
-                    ejecutar_ejercicio4(nombre_web)
+                    nombre_web = request.form.get("nombre_dict_input", "").strip()
+                    if nombre_web == "":
+                        print("⚠️ Debes ingresar un nombre en el campo interactivo.")
+                    else:
+                        ejecutar_ejercicio4(nombre_web)
+
             except Exception as e:
-                print(f"❌ Error de procesamiento web: {str(e)}")
+                print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
 
     return render_template(
@@ -84,6 +94,10 @@ def gestionar_ejercicio(num_ej):
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
+        es_interactivo=reto["es_interactivo"],
+        consola=salida_consola,
+        datos_retos_nav=list(DATOS_RETOS.keys())
+    )
         es_interactivo=reto["es_interactivo"],
         consola=salida_consola,
         datos_retos_nav=list(DATOS_RETOS.keys())
