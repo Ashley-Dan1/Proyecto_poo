@@ -68,7 +68,6 @@ def gestionar_ejercicio(num_ej):
                         ejecutar_ejercicio2(float(n1_str), float(n2_str))
 
                 elif num_ej == 3:
-                    # Campo de texto libre — se pasa tal cual como string (sin casting)
                     entrada_web = request.form.get("entrada_cruda_input", "").strip()
                     if entrada_web == "":
                         print("⚠️ Debes ingresar un valor en el campo.")
@@ -86,10 +85,6 @@ def gestionar_ejercicio(num_ej):
         ej_actual=num_ej,
         enunciado=reto["enunciado"],
         codigo=reto["codigo_fuente"],
-        es_interactivo=reto["es_interactivo"],
-        consola=salida_consola,
-        datos_retos_nav=list(DATOS_RETOS.keys())
-    )
         es_interactivo=reto["es_interactivo"],
         consola=salida_consola,
         datos_retos_nav=list(DATOS_RETOS.keys())
