@@ -1,15 +1,13 @@
 {# ================================================================
    formularios.html — Campos interactivos por bloque y ejercicio
-   CORRECCIONES:
-   - bloque01 ej2: precio sin value precargado
-   - bloque02: campos correctos (elementos de lista)
-   - bloque07: campos correctos (numero, args, factorial)
-   - bloque10: campos correctos (nombre/edad/ciudad)
-   - bloque12: campos de excepciones
-   - bloque13: campos de decoradores
-   - bloque14: campos de unpacking
-   - bloque15: campos de funciones de orden superior
-   - bloque05 ej3: password usa type="password"
+   CORRECCIONES APLICADAS:
+   - Todos los campos arrancan vacíos (sin value precargado)
+   - Campos numéricos usan type="number" (no permiten letras)
+   - Campos de texto usan type="text" con pattern adecuado
+   - bloque09 ej3: pattern incluye punto decimal
+   - bloque11: pattern incluye guion para negativos
+   - bloque04 ej3: pattern incluye espacios
+   - bloque09 ej1: pattern solo numérico (no letras en tupla)
    ================================================================ #}
 
 {# ---- BLOQUE 00 ---- #}
@@ -21,12 +19,12 @@
     {% if ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Precio del producto (prueba un valor negativo para ver la validación)</label>
-            <input type="number" step="0.01" class="form-control" name="precio_input" placeholder="Ej: -50" data-tipo="numero">
+            <input type="number" step="0.01" class="form-control" name="precio_input" placeholder="Ej: -50">
         </div>
     {% elif ej_actual == 3 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Nombre del estudiante</label>
-            <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Alejandro" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+            <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Alejandro">
         </div>
         <div class="mb-3">
             <label class="form-label small fw-bold">¿Incluir notas iniciales?</label>
@@ -38,7 +36,7 @@
     {% elif ej_actual == 4 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Nombre para el diccionario</label>
-            <input type="text" class="form-control" name="nombre_dict_input" placeholder="Ej: Gabriela" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+            <input type="text" class="form-control" name="nombre_dict_input" placeholder="Ej: Gabriela">
         </div>
     {% endif %}
 
@@ -47,7 +45,8 @@
     {% if ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Elementos de la lista (separados por coma)</label>
-            <input type="text" class="form-control" name="elementos_input" placeholder="Ej: 10, 20, 30, 40, 50" pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+            <input type="text" class="form-control" name="elementos_input" placeholder="Ej: 10, 20, 30, 40, 50"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% else %}
         <p class="text-muted small mb-0">Este ejercicio ejecuta una demostración fija sin parámetros adicionales.</p>
@@ -59,22 +58,22 @@
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Valor A</label>
-                <input type="number" step="any" class="form-control" name="valor_a_input" placeholder="Ej: 20" data-tipo="numero">
+                <input type="number" step="any" class="form-control" name="valor_a_input" placeholder="Ej: 20">
             </div>
             <div class="col-sm-6">
-                <label class="form-label small fw-bold">Valor B</label>
-                <input type="number" step="any" class="form-control" name="valor_b_input" placeholder="Ej: 4" data-tipo="numero">
+                <label class="form-label small fw-bold">Valor B (distinto de 0 para evitar división por cero)</label>
+                <input type="number" step="any" class="form-control" name="valor_b_input" placeholder="Ej: 4">
             </div>
         </div>
     {% elif ej_actual == 2 %}
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Elemento 1</label>
-                <input type="text" class="form-control" name="item1_input" placeholder="Ej: Objeto1" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+" title="Solo letras y números" data-tipo="texto">
+                <input type="text" class="form-control" name="item1_input" placeholder="Ej: Objeto1">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Elemento 2</label>
-                <input type="text" class="form-control" name="item2_input" placeholder="Ej: Objeto2" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+" title="Solo letras y números" data-tipo="texto">
+                <input type="text" class="form-control" name="item2_input" placeholder="Ej: Objeto2">
             </div>
         </div>
     {% endif %}
@@ -85,28 +84,30 @@
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Nombre</label>
-                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Ana" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Ana">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Edad</label>
-                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 25" data-tipo="numero">
+                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 25">
             </div>
         </div>
     {% elif ej_actual == 2 %}
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Número 1</label>
-                <input type="number" step="any" class="form-control" name="num1_input" placeholder="Ej: 10" data-tipo="numero">
+                <input type="number" step="any" class="form-control" name="num1_input" placeholder="Ej: 10">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Número 2</label>
-                <input type="number" step="any" class="form-control" name="num2_input" placeholder="Ej: 20" data-tipo="numero">
+                <input type="number" step="any" class="form-control" name="num2_input" placeholder="Ej: 20">
             </div>
         </div>
     {% elif ej_actual == 3 %}
         <div class="mb-3">
-            <label class="form-label small fw-bold">Entrada sin casting (se trata como texto)</label>
-            <input type="text" class="form-control" name="entrada_cruda_input" placeholder="Ej: 10" pattern="[a-zA-Z0-9]+" title="Solo letras y números, sin caracteres especiales" data-tipo="texto">
+            <label class="form-label small fw-bold">Entrada sin casting (se trata como texto, puedes escribir letras o números)</label>
+            {# CORREGIDO: pattern incluye \s para permitir espacios #}
+            <input type="text" class="form-control" name="entrada_cruda_input" placeholder="Ej: 10"
+                   pattern="[a-zA-Z0-9\s]+" title="Letras, números y espacios">
         </div>
     {% endif %}
 
@@ -115,18 +116,18 @@
     {% if ej_actual == 1 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Número</label>
-            <input type="number" class="form-control" name="numero_input" placeholder="Ej: 15" data-tipo="numero">
+            <input type="number" class="form-control" name="numero_input" placeholder="Ej: 15">
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Calificación (0–100)</label>
-            <input type="number" step="0.1" min="0" max="100" class="form-control" name="nota_input" placeholder="Ej: 85" data-tipo="numero">
+            <input type="number" step="0.1" min="0" max="100" class="form-control" name="nota_input" placeholder="Ej: 85">
         </div>
     {% elif ej_actual == 3 %}
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Usuario</label>
-                <input type="text" class="form-control" name="usuario_input" placeholder="Ej: admin" pattern="[a-zA-Z0-9_\-]+" title="Solo letras, números, _ y -" data-tipo="texto">
+                <input type="text" class="form-control" name="usuario_input" placeholder="Ej: admin">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Contraseña</label>
@@ -139,18 +140,20 @@
 {% elif bloque_id == 'bloque06' %}
     {% if ej_actual == 1 %}
         <div class="mb-3">
-            <label class="form-label small fw-bold">Límite del conteo</label>
-            <input type="number" min="1" max="100" class="form-control" name="limite_input" placeholder="Ej: 10" data-tipo="numero">
+            <label class="form-label small fw-bold">Límite del conteo (máximo 100)</label>
+            {# CORREGIDO: name='limite_input' alineado con controller.py corregido #}
+            <input type="number" min="1" max="100" class="form-control" name="limite_input" placeholder="Ej: 10">
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Lista de frutas (separadas por coma)</label>
-            <input type="text" class="form-control" name="frutas_input" placeholder="Ej: manzana, pera, uva" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ,\s]+" title="Solo letras y comas" data-tipo="texto">
+            <input type="text" class="form-control" name="frutas_input" placeholder="Ej: manzana, pera, uva">
         </div>
     {% elif ej_actual == 3 %}
         <div class="mb-3">
-            <label class="form-label small fw-bold">Límite del rango</label>
-            <input type="number" min="1" max="100" class="form-control" name="limite_input" placeholder="Ej: 10" data-tipo="numero">
+            <label class="form-label small fw-bold">Límite del rango (máximo 100)</label>
+            {# CORREGIDO: name='limite_input' alineado con controller.py corregido #}
+            <input type="number" min="1" max="100" class="form-control" name="limite_input" placeholder="Ej: 10">
         </div>
     {% endif %}
 
@@ -159,17 +162,18 @@
     {% if ej_actual == 1 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Número para calcular el doble</label>
-            <input type="number" step="any" class="form-control" name="numero_input" placeholder="Ej: 4" data-tipo="numero">
+            <input type="number" step="any" class="form-control" name="numero_input" placeholder="Ej: 4">
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Números para sumar con *args (separados por coma)</label>
-            <input type="text" class="form-control" name="args_input" placeholder="Ej: 1, 2, 3, 4" pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+            <input type="text" class="form-control" name="args_input" placeholder="Ej: 1, 2, 3, 4"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% elif ej_actual == 3 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Número para calcular el factorial (0–12)</label>
-            <input type="number" min="0" max="12" class="form-control" name="factorial_input" placeholder="Ej: 5" data-tipo="numero">
+            <input type="number" min="0" max="12" class="form-control" name="factorial_input" placeholder="Ej: 5">
         </div>
     {% endif %}
 
@@ -178,7 +182,8 @@
     {% if ej_actual == 1 or ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Elementos numéricos (separados por coma)</label>
-            <input type="text" class="form-control" name="elementos_input" placeholder="Ej: 5, 2, 8" pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+            <input type="text" class="form-control" name="elementos_input" placeholder="Ej: 5, 2, 8"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% endif %}
 
@@ -186,18 +191,23 @@
 {% elif bloque_id == 'bloque09' %}
     {% if ej_actual == 1 %}
         <div class="mb-3">
-            <label class="form-label small fw-bold">Elementos de la tupla (separados por coma)</label>
-            <input type="text" class="form-control" name="tupla_input" placeholder="Ej: 1, 2, 3, 4" pattern="[a-zA-Z0-9,\s]+" title="Letras o números separados por comas" data-tipo="texto">
+            <label class="form-label small fw-bold">Elementos numéricos de la tupla (separados por coma)</label>
+            {# CORREGIDO: pattern solo numérico, no permite letras — es un ejercicio de tuplas numéricas #}
+            <input type="text" class="form-control" name="tupla_input" placeholder="Ej: 1, 2, 3, 4"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Valores numéricos (mínimo 2, separados por coma)</label>
-            <input type="text" class="form-control" name="tupla_input" placeholder="Ej: 100, 200, 300, 400" pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+            <input type="text" class="form-control" name="tupla_input" placeholder="Ej: 100, 200, 300, 400"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% elif ej_actual == 3 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Coordenadas (formato: x,y | x,y | x,y)</label>
-            <input type="text" class="form-control" name="coordenadas_input" placeholder="Ej: 1,2 | 3,4 | 5,6" pattern="[\d,\s\|]+" title="Solo números, comas, espacios y |" data-tipo="lista-numeros">
+            {# CORREGIDO: pattern incluye punto decimal para coordenadas como 1.5,2.5 #}
+            <input type="text" class="form-control" name="coordenadas_input" placeholder="Ej: 1,2 | 3,4 | 5,6"
+                   pattern="[\d,\s\|\.\-]+" title="Números, comas, pipes y puntos decimales" data-tipo="lista-numeros">
         </div>
     {% endif %}
 
@@ -207,15 +217,15 @@
         <div class="row g-3">
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Nombre</label>
-                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Juan" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Juan">
             </div>
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Edad</label>
-                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 25" data-tipo="numero">
+                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 25">
             </div>
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Ciudad</label>
-                <input type="text" class="form-control" name="ciudad_input" placeholder="Ej: Quito" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+                <input type="text" class="form-control" name="ciudad_input" placeholder="Ej: Quito">
             </div>
         </div>
     {% else %}
@@ -228,17 +238,21 @@
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Conjunto A (separado por comas)</label>
-                <input type="text" class="form-control" name="set_a_input" placeholder="Ej: 1, 2, 3, 4" pattern="[\d,\s\.]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+                {# CORREGIDO: pattern incluye guion para negativos #}
+                <input type="text" class="form-control" name="set_a_input" placeholder="Ej: 1, 2, 3, 4"
+                       pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Conjunto B (separado por comas)</label>
-                <input type="text" class="form-control" name="set_b_input" placeholder="Ej: 3, 4, 5, 6" pattern="[\d,\s\.]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+                <input type="text" class="form-control" name="set_b_input" placeholder="Ej: 3, 4, 5, 6"
+                       pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
             </div>
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Lista con duplicados (separados por coma)</label>
-            <input type="text" class="form-control" name="lista_input" placeholder="Ej: 1, 2, 2, 3, 3, 3, 4" pattern="[\d,\s\.]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+            <input type="text" class="form-control" name="lista_input" placeholder="Ej: 1, 2, 2, 3, 3, 3, 4"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% endif %}
 
@@ -247,22 +261,22 @@
     {% if ej_actual == 1 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Texto a convertir a int (prueba con letras para ver el ValueError)</label>
-            <input type="text" class="form-control" name="texto_input" placeholder="Ej: abc  o  42" pattern="[a-zA-Z0-9\.\-]+" title="Letras o números" data-tipo="texto">
+            <input type="text" class="form-control" name="texto_input" placeholder="Ej: abc  o  42">
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
-            <label class="form-label small fw-bold">Índice a acceder en la lista [10, 20, 30] (prueba con 5 para ver el IndexError)</label>
-            <input type="number" class="form-control" name="indice_input" placeholder="Ej: 5" data-tipo="numero">
+            <label class="form-label small fw-bold">Índice a acceder en la lista [10, 20, 30] (ingresa ≥ 3 para ver el IndexError)</label>
+            <input type="number" class="form-control" name="indice_input" placeholder="Ej: 5">
         </div>
     {% elif ej_actual == 3 %}
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Texto a convertir a int</label>
-                <input type="text" class="form-control" name="texto_num_input" placeholder="Ej: 10  o  abc" pattern="[a-zA-Z0-9\.\-]+" title="Letras o números" data-tipo="texto">
+                <input type="text" class="form-control" name="texto_num_input" placeholder="Ej: 10  o  abc">
             </div>
             <div class="col-sm-6">
-                <label class="form-label small fw-bold">Divisor (prueba 0 para ZeroDivisionError)</label>
-                <input type="number" step="any" class="form-control" name="divisor_input" placeholder="Ej: 0" data-tipo="numero">
+                <label class="form-label small fw-bold">Divisor (ingresa 0 para ver el ZeroDivisionError)</label>
+                <input type="number" step="any" class="form-control" name="divisor_input" placeholder="Ej: 0">
             </div>
         </div>
     {% endif %}
@@ -272,22 +286,22 @@
     {% if ej_actual == 1 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Nombre de la función a decorar</label>
-            <input type="text" class="form-control" name="nombre_funcion_input" placeholder="Ej: procesar_datos" pattern="[a-zA-Z_][a-zA-Z0-9_]*" title="Nombre válido de función Python" data-tipo="texto">
+            <input type="text" class="form-control" name="nombre_funcion_input" placeholder="Ej: procesar_datos">
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
-            <label class="form-label small fw-bold">Número para calcular su cuadrado (prueba negativo para ver validación)</label>
-            <input type="number" step="any" class="form-control" name="numero_input" placeholder="Ej: 5  o  -3" data-tipo="numero">
+            <label class="form-label small fw-bold">Número para calcular su cuadrado (prueba negativo para ver la validación)</label>
+            <input type="number" step="any" class="form-control" name="numero_input" placeholder="Ej: 5  o  -3">
         </div>
     {% elif ej_actual == 3 %}
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Valor A</label>
-                <input type="number" step="any" class="form-control" name="valor_a_input" placeholder="Ej: 2" data-tipo="numero">
+                <input type="number" step="any" class="form-control" name="valor_a_input" placeholder="Ej: 2">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Valor B</label>
-                <input type="number" step="any" class="form-control" name="valor_b_input" placeholder="Ej: 3" data-tipo="numero">
+                <input type="number" step="any" class="form-control" name="valor_b_input" placeholder="Ej: 3">
             </div>
         </div>
     {% endif %}
@@ -297,30 +311,32 @@
     {% if ej_actual == 1 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Valores para desempaquetar (mínimo 3, separados por coma)</label>
-            <input type="text" class="form-control" name="tupla_input" placeholder="Ej: 10, 20, 30, 40" pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+            <input type="text" class="form-control" name="tupla_input" placeholder="Ej: 10, 20, 30, 40"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% elif ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Lista de 3 factores para multiplicar (separados por coma)</label>
-            <input type="text" class="form-control" name="lista_input" placeholder="Ej: 2, 3, 4" pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+            <input type="text" class="form-control" name="lista_input" placeholder="Ej: 2, 3, 4"
+                   pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
         </div>
     {% elif ej_actual == 3 %}
         <div class="row g-3">
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Llave 1</label>
-                <input type="text" class="form-control" name="llave1" placeholder="Ej: a" pattern="[a-zA-Z_]+" title="Solo letras y _" data-tipo="texto">
+                <input type="text" class="form-control" name="llave1" placeholder="Ej: a">
             </div>
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Valor 1</label>
-                <input type="text" class="form-control" name="valor1" placeholder="Ej: 1" pattern="[a-zA-Z0-9]+" title="Letras o números" data-tipo="texto">
+                <input type="text" class="form-control" name="valor1" placeholder="Ej: 1">
             </div>
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Llave 2</label>
-                <input type="text" class="form-control" name="llave2" placeholder="Ej: b" pattern="[a-zA-Z_]+" title="Solo letras y _" data-tipo="texto">
+                <input type="text" class="form-control" name="llave2" placeholder="Ej: b">
             </div>
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Valor 2</label>
-                <input type="text" class="form-control" name="valor2" placeholder="Ej: 2" pattern="[a-zA-Z0-9]+" title="Letras o números" data-tipo="texto">
+                <input type="text" class="form-control" name="valor2" placeholder="Ej: 2">
             </div>
         </div>
     {% endif %}
@@ -329,12 +345,13 @@
 {% elif bloque_id == 'bloque15' %}
     <div class="mb-3">
         <label class="form-label small fw-bold">Lista de números (separados por coma)</label>
-        <input type="text" class="form-control" name="lista_numeros_input" placeholder="Ej: 1, 2, 3, 4" pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+        <input type="text" class="form-control" name="lista_numeros_input" placeholder="Ej: 1, 2, 3, 4"
+               pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
     </div>
     {% if ej_actual == 2 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Umbral de filtrado</label>
-            <input type="number" step="any" class="form-control" name="umbral_input" placeholder="Ej: 3" data-tipo="numero">
+            <input type="number" step="any" class="form-control" name="umbral_input" placeholder="Ej: 3">
         </div>
     {% endif %}
 
@@ -343,14 +360,14 @@
     {% if ej_actual == 1 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Texto a escribir en el archivo</label>
-            <input type="text" class="form-control" name="texto_input" placeholder="Ej: Hola Mundo de persistencia" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+" title="Solo letras y números" data-tipo="texto">
+            <input type="text" class="form-control" name="texto_input" placeholder="Ej: Hola Mundo de persistencia">
         </div>
     {% elif ej_actual == 2 %}
         <p class="text-muted small mb-0">⚠️ Asegúrate de haber ejecutado el Ejercicio 1 primero para crear el archivo. Este ejercicio lo leerá y mostrará su contenido.</p>
     {% elif ej_actual == 3 %}
         <div class="mb-3">
             <label class="form-label small fw-bold">Línea a añadir al final del archivo</label>
-            <input type="text" class="form-control" name="texto_anexo_input" placeholder="Ej: Esta es una línea añadida posteriormente." pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s\.]+" title="Solo letras, números y puntos" data-tipo="texto">
+            <input type="text" class="form-control" name="texto_anexo_input" placeholder="Ej: Esta es una línea añadida posteriormente.">
         </div>
     {% endif %}
 
@@ -360,26 +377,27 @@
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Nombre</label>
-                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Daniel" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Daniel">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Edad</label>
-                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 20" data-tipo="numero">
+                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 20">
             </div>
         </div>
     {% elif ej_actual == 2 %}
         <div class="row g-3">
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Nombre</label>
-                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: María" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: María">
             </div>
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Edad</label>
-                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 21" data-tipo="numero">
+                <input type="number" min="0" max="120" class="form-control" name="edad_input" placeholder="Ej: 21">
             </div>
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Notas (separadas por coma)</label>
-                <input type="text" class="form-control" name="notas_input" placeholder="Ej: 18, 15, 20, 14" pattern="[\d,\s\.]+" title="Solo números separados por comas" data-tipo="lista-numeros">
+                <input type="text" class="form-control" name="notas_input" placeholder="Ej: 18, 15, 20, 14"
+                       pattern="[\d,\s\.\-]+" title="Solo números separados por comas" data-tipo="lista-numeros">
             </div>
         </div>
     {% endif %}
@@ -390,37 +408,37 @@
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Base del triángulo</label>
-                <input type="number" step="any" min="0.1" class="form-control" name="base_input" placeholder="Ej: 6" data-tipo="numero">
+                <input type="number" step="any" min="0.1" class="form-control" name="base_input" placeholder="Ej: 6">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Altura del triángulo</label>
-                <input type="number" step="any" min="0.1" class="form-control" name="altura_input" placeholder="Ej: 4" data-tipo="numero">
+                <input type="number" step="any" min="0.1" class="form-control" name="altura_input" placeholder="Ej: 4">
             </div>
         </div>
     {% elif ej_actual == 2 %}
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Nombre del producto</label>
-                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Laptop" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+" title="Solo letras y números" data-tipo="texto">
+                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Laptop">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Precio (prueba negativo para ver la validación)</label>
-                <input type="number" step="0.01" class="form-control" name="precio_input" placeholder="Ej: 900 o -50" data-tipo="numero">
+                <input type="number" step="0.01" class="form-control" name="precio_input" placeholder="Ej: 900 o -50">
             </div>
         </div>
     {% elif ej_actual == 3 %}
         <div class="row g-3">
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Nombre del perro</label>
-                <input type="text" class="form-control" name="perro_input" placeholder="Ej: Rex" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras" data-tipo="texto">
+                <input type="text" class="form-control" name="perro_input" placeholder="Ej: Rex">
             </div>
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Nombre del gato</label>
-                <input type="text" class="form-control" name="gato_input" placeholder="Ej: Michi" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras" data-tipo="texto">
+                <input type="text" class="form-control" name="gato_input" placeholder="Ej: Michi">
             </div>
             <div class="col-sm-4">
                 <label class="form-label small fw-bold">Nombre de la vaca</label>
-                <input type="text" class="form-control" name="vaca_input" placeholder="Ej: Lola" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras" data-tipo="texto">
+                <input type="text" class="form-control" name="vaca_input" placeholder="Ej: Lola">
             </div>
         </div>
     {% endif %}
@@ -431,30 +449,30 @@
         <div class="row g-3">
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Nombre del empleado</label>
-                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Laura" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo letras y espacios" data-tipo="texto">
+                <input type="text" class="form-control" name="nombre_input" placeholder="Ej: Laura">
             </div>
             <div class="col-sm-6">
                 <label class="form-label small fw-bold">Salario</label>
-                <input type="number" step="0.01" min="0" class="form-control" name="salario_input" placeholder="Ej: 1500" data-tipo="numero">
+                <input type="number" step="0.01" min="0" class="form-control" name="salario_input" placeholder="Ej: 1500">
             </div>
         </div>
     {% elif ej_actual == 3 %}
         <div class="row g-3">
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Descripción 1</label>
-                <input type="text" class="form-control" name="desc1_input" placeholder="Ej: Laptop" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+" title="Solo letras y números" data-tipo="texto">
+                <input type="text" class="form-control" name="desc1_input" placeholder="Ej: Laptop">
             </div>
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Valor 1</label>
-                <input type="number" step="0.01" min="0" class="form-control" name="val1_input" placeholder="Ej: 900" data-tipo="numero">
+                <input type="number" step="0.01" min="0" class="form-control" name="val1_input" placeholder="Ej: 900">
             </div>
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Descripción 2</label>
-                <input type="text" class="form-control" name="desc2_input" placeholder="Ej: Mouse" pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ0-9\s]+" title="Solo letras y números" data-tipo="texto">
+                <input type="text" class="form-control" name="desc2_input" placeholder="Ej: Mouse">
             </div>
             <div class="col-sm-3">
                 <label class="form-label small fw-bold">Valor 2</label>
-                <input type="number" step="0.01" min="0" class="form-control" name="val2_input" placeholder="Ej: 25" data-tipo="numero">
+                <input type="number" step="0.01" min="0" class="form-control" name="val2_input" placeholder="Ej: 25">
             </div>
         </div>
     {% else %}
