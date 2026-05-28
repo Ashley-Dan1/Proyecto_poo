@@ -2,9 +2,6 @@
 # CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 10: DICCIONARIOS
 # =====================================================================
 
-# ---------------------------------------------------------------------
-# EJERCICIO 1: Crear dict de persona y acceder con [] y get().
-# ---------------------------------------------------------------------
 class InspectorDiccionario:
     def __init__(self, nombre: str, edad: int, ciudad: str):
         self.persona = {
@@ -32,9 +29,6 @@ class GestorAccesoDiccionario:
         InspectorDiccionario(nombre, edad, ciudad).mostrar_accesos()
 
 
-# ---------------------------------------------------------------------
-# EJERCICIO 2: Iterar sobre items() → clave y valor.
-# ---------------------------------------------------------------------
 class IteradorDiccionario:
     def __init__(self, nombre: str, edad: int, ciudad: str):
         self.persona = {
@@ -58,9 +52,6 @@ class GestorIteracionDiccionario:
         IteradorDiccionario(nombre, edad, ciudad).iterar()
 
 
-# ---------------------------------------------------------------------
-# EJERCICIO 3: Referencia vs copia con .copy().
-# ---------------------------------------------------------------------
 class DemostradorCopiaDict:
     def __init__(self):
         self.datos_originales = {"a": 1}
@@ -100,6 +91,3 @@ def ejecutar_ejercicio2(nombre, edad, ciudad):
 
 def ejecutar_ejercicio3():
     GestorCopiaDict.ejecutar_demostracion()
-
-def ejecutar_ejercicio3(numero_factorial):
-    GestorFactorial.ejecutar_analisis(numero_factorial)
