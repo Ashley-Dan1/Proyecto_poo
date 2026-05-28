@@ -2,14 +2,14 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque10.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b10_bp = Blueprint('bloque10', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
         "enunciado": "Crea un diccionario de persona con nombre, edad y ciudad. Accede a sus valores usando [] y también usando get().",
-        "codigo_fuente": "persona = {'nombre': 'Juan', 'edad': 25, 'ciudad': 'Quito'}\nprint(persona['nombre'])              # acceso directo\nprint(persona.get('ciudad'))          # acceso seguro\nprint(persona.get('telefono', 'N/A')) # valor por defecto",
+        "codigo_fuente": "persona = {'nombre': 'Juan', 'edad': 25, 'ciudad': 'Quito'}\nprint(persona['nombre'])\nprint(persona.get('ciudad'))\nprint(persona.get('telefono', 'No existe'))",
         "es_interactivo": True
     },
     2: {
@@ -19,23 +19,24 @@ DATOS_RETOS = {
     },
     3: {
         "enunciado": "Demuestra qué pasa si haces copia=datos y luego copia['b']=2. ¿Cambia el original? Usa .copy() para evitarlo.",
-        "codigo_fuente": "datos = {'a': 1}\ncopia_ref  = datos          # misma referencia\ncopia_real = datos.copy()   # objeto nuevo\n\ncopia_ref['b'] = 2\nprint(datos)      # {'a':1, 'b':2} ← también cambió\nprint(copia_real) # {'a':1}        ← no cambió",
-        "es_interactivo": True
+        "codigo_fuente": "datos = {'a': 1}\ncopia_ref  = datos\ncopia_real = datos.copy()\ncopia_ref['b'] = 2\nprint(datos)      # {'a':1, 'b':2}\nprint(copia_real) # {'a':1}",
+        "es_interactivo": False
     }
 }
+
 
 @b10_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque10", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque10",
         bloque_titulo=info.get("titulo", "Bloque 10"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b10_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -51,17 +52,26 @@ def gestionar_ejercicio(num_ej):
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
-                    nombre_web = request.form.get("nombre_input", "Juan")
-                    edad_web   = int(request.form.get("edad_input", 25))
-                    ciudad_web = request.form.get("ciudad_input", "Quito")
-                    ejecutar_ejercicio1(nombre_web, edad_web, ciudad_web)
+                    nombre = request.form.get("nombre_input", "").strip()
+                    edad_str = request.form.get("edad_input", "").strip()
+                    ciudad = request.form.get("ciudad_input", "").strip()
+                    if nombre == "" or edad_str == "" or ciudad == "":
+                        print("⚠️ Debes completar nombre, edad y ciudad.")
+                    else:
+                        ejecutar_ejercicio1(nombre, int(edad_str), ciudad)
+
                 elif num_ej == 2:
-                    nombre_web = request.form.get("nombre_input", "Juan")
-                    edad_web   = int(request.form.get("edad_input", 25))
-                    ciudad_web = request.form.get("ciudad_input", "Quito")
-                    ejecutar_ejercicio2(nombre_web, edad_web, ciudad_web)
+                    nombre = request.form.get("nombre_input", "").strip()
+                    edad_str = request.form.get("edad_input", "").strip()
+                    ciudad = request.form.get("ciudad_input", "").strip()
+                    if nombre == "" or edad_str == "" or ciudad == "":
+                        print("⚠️ Debes completar nombre, edad y ciudad.")
+                    else:
+                        ejecutar_ejercicio2(nombre, int(edad_str), ciudad)
+
                 elif num_ej == 3:
                     ejecutar_ejercicio3()
+
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
@@ -77,4 +87,3 @@ def gestionar_ejercicio(num_ej):
         consola=salida_consola,
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
-
