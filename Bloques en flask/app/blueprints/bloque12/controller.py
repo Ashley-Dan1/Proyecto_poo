@@ -3,6 +3,7 @@ from app.blueprints.bloque12.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b12_bp = Blueprint('bloque12', __name__, template_folder='../../templates')
 
@@ -13,7 +14,7 @@ DATOS_RETOS = {
         "es_interactivo": True
     },
     2: {
-        "enunciado": "Captura el IndexError que ocurre al acceder a un índice fuera de rango en una lista de 3 elementos [10, 20, 30]. Ingresa un índice >= 3 para provocar el error.",
+        "enunciado": "Captura el IndexError al acceder a un índice fuera de rango en la lista [10, 20, 30]. Ingresa un índice >= 3 para provocar el error.",
         "codigo_fuente": "lista = [10, 20, 30]\ntry:\n    print(lista[indice])\nexcept IndexError as e:\n    print('IndexError:', e)",
         "es_interactivo": True
     },
@@ -42,47 +43,35 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    texto_web = request.form.get("texto_input", "").strip()
-                    if texto_web == "":
-                        print("⚠️ Debes ingresar un texto.")
-                    else:
-                        ejecutar_ejercicio1(texto_web)
+        if num_ej == 1:
+            texto = request.form.get("texto_input", "").strip()
+            if campos_vacios(texto):
+                salida_consola = "⚠️ Debes ingresar un texto."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, texto)
 
-                elif num_ej == 2:
-                    indice_str = request.form.get("indice_input", "").strip()
-                    if indice_str == "":
-                        print("⚠️ Debes ingresar un índice.")
-                    else:
-                        indice_web = int(indice_str)
-                        # Índices negativos en Python son válidos y NO lanzan IndexError.
-                        # Para demostrar el error el índice debe ser >= len(lista) = 3
-                        if indice_web < 0:
-                            print("⚠️ Los índices negativos son válidos en Python (lista[-1] = último elemento).")
-                            print("   Para provocar un IndexError ingresa un índice >= 3.")
-                        else:
-                            ejecutar_ejercicio2([10, 20, 30], indice_web)
+        elif num_ej == 2:
+            indice_str = request.form.get("indice_input", "").strip()
+            if campos_vacios(indice_str):
+                salida_consola = "⚠️ Debes ingresar un índice."
+            else:
+                indice = int(indice_str)
+                if indice < 0:
+                    salida_consola = "⚠️ Los índices negativos son válidos en Python (lista[-1] = último elemento).\n   Para provocar un IndexError ingresa un índice >= 3."
+                else:
+                    salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, [10, 20, 30], indice)
 
-                elif num_ej == 3:
-                    texto_web = request.form.get("texto_num_input", "").strip()
-                    divisor_str = request.form.get("divisor_input", "").strip()
-                    if texto_web == "" or divisor_str == "":
-                        print("⚠️ Debes completar ambos campos.")
-                    else:
-                        ejecutar_ejercicio3(texto_web, float(divisor_str))
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            texto = request.form.get("texto_num_input", "").strip()
+            divisor_str = request.form.get("divisor_input", "").strip()
+            if campos_vacios(texto, divisor_str):
+                salida_consola = "⚠️ Debes completar ambos campos."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, texto, float(divisor_str))
 
     return render_template(
         'ejercicio_detalle.html',
