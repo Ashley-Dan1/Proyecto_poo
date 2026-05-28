@@ -1,93 +1,90 @@
 # =====================================================================
-# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 15: LIST COMPREHENSIONS
+# CÓDIGO PURO DE LOS EJERCICIOS - BLOQUE 15: FUNCIONES DE ORDEN SUPERIOR
 # =====================================================================
+from functools import reduce
 
 # ---------------------------------------------------------------------
-# EJERCICIO 1: Crea una lista con los cuadrados de los números del 1 al 5 usando List Comprehension.
+# EJERCICIO 1: map() para incrementar en 1 cada elemento.
 # ---------------------------------------------------------------------
-class GeneradorCuadradosComprimido:
-    def __init__(self, limite_maximo: int):
-        self.limite = limite_maximo
+class TransformadorMap:
+    def __init__(self, numeros: list):
+        self.numeros = numeros
 
-    def generar_lista_cuadrados(self):
-        print(f"⚡ GENERACIÓN DE CUADRADOS (1 AL {self.limite})")
+    def incrementar(self):
+        print("🗺️  FUNCIONES DE ORDEN SUPERIOR — map()")
         print("--------------------------------------------------")
-        
-        # Sintaxis de List Comprehension pura: [expresión for elemento in iterable]
-        lista_cuadrados = [numero ** 2 for numero in range(1, self.limite + 1)]
-        
-        print(f"➡️ Lista resultante generada de forma compacta: {lista_cuadrados}")
-        return lista_cuadrados
+        print(f"  Lista original  : {self.numeros}")
+        resultado = list(map(lambda x: x + 1, self.numeros))
+        print(f"  lambda x: x + 1")
+        print(f"\n  Resultado       : {resultado}")
+        print("\n💡 map() aplica la función a CADA elemento y devuelve un iterador.")
 
 
-class GestorCuadradosComprension:
+class GestorMap:
     @staticmethod
-    def ejecutar_demostracion(limite: int):
-        generador = GeneradorCuadradosComprimido(limite)
-        generador.generar_lista_cuadrados()
+    def ejecutar_demostracion(lista: list):
+        TransformadorMap(lista).incrementar()
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 2: Filtra una lista de números para obtener solo los pares usando List Comprehension.
+# EJERCICIO 2: filter() para obtener elementos mayores a un umbral.
 # ---------------------------------------------------------------------
-class FiltroParesComprimido:
-    def __init__(self, lista_origen: list):
-        self.datos = lista_origen
+class FiltradorFilter:
+    def __init__(self, numeros: list):
+        self.numeros = numeros
 
-    def extraer_solo_pares(self):
-        print("🔍 FILTRADO COMPACTO DE ELEMENTOS PARES")
+    def filtrar_mayores(self, umbral: float):
+        print(f"🔍 FUNCIONES DE ORDEN SUPERIOR — filter() (umbral: {umbral})")
         print("--------------------------------------------------")
-        print(f"Lista de entrada provista: {self.datos}")
-        
-        # List Comprehension con condicional integrado: [expresión for elemento in iterable if condición]
-        lista_pares = [elemento for elemento in self.datos if elemento % 2 == 0]
-        
-        print(f"➡️ Lista filtrada resultante: {lista_pares}")
-        return lista_pares
+        print(f"  Lista original  : {self.numeros}")
+        resultado = list(filter(lambda x: x > umbral, self.numeros))
+        print(f"  lambda x: x > {umbral}")
+        print(f"\n  Resultado       : {resultado}")
+        print("\n💡 filter() conserva solo los elementos donde la función retorna True.")
 
 
-class GestorFiltroPares:
+class GestorFilter:
     @staticmethod
-    def ejecutar_calculo(lista_numeros: list):
-        filtrador = FiltroParesComprimido(lista_numeros)
-        filtrador.extraer_solo_pares()
+    def ejecutar_demostracion(lista: list, umbral: float):
+        FiltradorFilter(lista).filtrar_mayores(umbral)
 
 
 # ---------------------------------------------------------------------
-# EJERCICIO 3: Crea una lista que contenga las palabras en mayúsculas de otra lista.
+# EJERCICIO 3: reduce() para multiplicar todos los elementos.
 # ---------------------------------------------------------------------
-class ConvertidorTextoComprimido:
-    def __init__(self, lista_palabras: list):
-        self.palabras = lista_palabras
+class ReductorReduce:
+    def __init__(self, numeros: list):
+        self.numeros = numeros
 
-    def transformar_a_mayusculas(self):
-        print("🔠 TRANSICIÓN DE TEXTO A MAYÚSCULAS")
+    def multiplicar(self):
+        print("➡️  FUNCIONES DE ORDEN SUPERIOR — reduce()")
         print("--------------------------------------------------")
-        print(f"Palabras de entrada: {self.palabras}")
-        
-        # Aplicación del método de cadena .upper() dentro de la comprensión
-        lista_mayusculas = [palabra.upper() for palabra in self.palabras]
-        
-        print(f"➡️ Lista de palabras normalizadas: {lista_mayusculas}")
-        return lista_mayusculas
+        print(f"  Lista original  : {self.numeros}")
+        if not self.numeros:
+            print("  ⚠️  Lista vacía, no se puede reducir.")
+            return
+        resultado = reduce(lambda x, y: x * y, self.numeros)
+        pasos = " × ".join(str(int(n) if n == int(n) else n) for n in self.numeros)
+        print(f"  lambda x, y: x * y")
+        print(f"  Proceso         : {pasos} = {resultado}")
+        print(f"\n  Resultado       : {resultado}")
+        print("\n💡 reduce() aplica la función de forma acumulada de izquierda a derecha.")
 
 
-class GestorMayusculasComprension:
+class GestorReduce:
     @staticmethod
-    def ejecutar_analisis(lista_cadenas: list):
-        convertidor = ConvertidorTextoComprimido(lista_cadenas)
-        convertidor.transformar_a_mayusculas()
+    def ejecutar_demostracion(lista: list):
+        ReductorReduce(lista).multiplicar()
 
 
 # =====================================================================
-# FUNCIONES DISPARADORAS (Conectan con el controlador de Flask)
+# FUNCIONES DISPARADORAS
 # =====================================================================
+def ejecutar_ejercicio1(lista):
+    GestorMap.ejecutar_demostracion(lista)
 
-def ejecutar_ejercicio1(limite):
-    GestorCuadradosComprension.ejecutar_demostracion(limite)
+def ejecutar_ejercicio2(lista, umbral):
+    GestorFilter.ejecutar_demostracion(lista, umbral)
 
-def ejecutar_ejercicio2(lista_numeros):
-    GestorFiltroPares.ejecutar_calculo(lista_numeros)
-
-def ejecutar_ejercicio3(lista_palabras):
-    GestorMayusculasComprension.ejecutar_analisis(lista_palabras)
+def ejecutar_ejercicio3(lista):
+    GestorReduce.ejecutar_demostracion(lista)
