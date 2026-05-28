@@ -3,6 +3,7 @@ from app.blueprints.bloque09.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b09_bp = Blueprint('bloque09', __name__, template_folder='../../templates')
 
@@ -42,52 +43,46 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    elementos_str = request.form.get("tupla_input", "").strip()
-                    if elementos_str == "":
-                        print("⚠️ Debes ingresar los elementos de la tupla.")
-                    else:
-                        tupla = tuple(x.strip() for x in elementos_str.split(",") if x.strip())
-                        ejecutar_ejercicio1(tupla)
+        if num_ej == 1:
+            elementos_str = request.form.get("tupla_input", "").strip()
+            if campos_vacios(elementos_str):
+                salida_consola = "⚠️ Debes ingresar los elementos de la tupla."
+            else:
+                tupla = tuple(x.strip() for x in elementos_str.split(",") if x.strip())
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, tupla)
 
-                elif num_ej == 2:
-                    elementos_str = request.form.get("tupla_input", "").strip()
-                    if elementos_str == "":
-                        print("⚠️ Debes ingresar los valores numéricos.")
+        elif num_ej == 2:
+            elementos_str = request.form.get("tupla_input", "").strip()
+            if campos_vacios(elementos_str):
+                salida_consola = "⚠️ Debes ingresar los valores numéricos."
+            else:
+                try:
+                    tupla = tuple(int(x.strip()) for x in elementos_str.split(",") if x.strip())
+                    if len(tupla) < 2:
+                        salida_consola = "⚠️ Necesitas al menos 2 elementos para el unpacking."
                     else:
-                        tupla = tuple(int(x.strip()) for x in elementos_str.split(",") if x.strip())
-                        if len(tupla) < 2:
-                            print("⚠️ Necesitas al menos 2 elementos para el unpacking.")
-                        else:
-                            ejecutar_ejercicio2(tupla)
+                        salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, tupla)
+                except ValueError:
+                    salida_consola = "⚠️ Ingresa solo números enteros separados por comas."
 
-                elif num_ej == 3:
-                    pares_str = request.form.get("coordenadas_input", "").strip()
-                    if pares_str == "":
-                        print("⚠️ Debes ingresar las coordenadas.")
-                    else:
-                        coordenadas = []
-                        for par in pares_str.split("|"):
-                            partes = par.strip().split(",")
-                            if len(partes) == 2:
-                                coordenadas.append((partes[0].strip(), partes[1].strip()))
-                        if not coordenadas:
-                            print("⚠️ Formato inválido. Usa: 1,2 | 3,4 | 5,6")
-                        else:
-                            ejecutar_ejercicio3(coordenadas)
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            pares_str = request.form.get("coordenadas_input", "").strip()
+            if campos_vacios(pares_str):
+                salida_consola = "⚠️ Debes ingresar las coordenadas."
+            else:
+                coordenadas = []
+                for par in pares_str.split("|"):
+                    partes = par.strip().split(",")
+                    if len(partes) == 2:
+                        coordenadas.append((partes[0].strip(), partes[1].strip()))
+                if not coordenadas:
+                    salida_consola = "⚠️ Formato inválido. Usa: 1,2 | 3,4 | 5,6"
+                else:
+                    salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, coordenadas)
 
     return render_template(
         'ejercicio_detalle.html',
