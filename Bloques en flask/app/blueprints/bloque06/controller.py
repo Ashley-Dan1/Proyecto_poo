@@ -3,6 +3,7 @@ from app.blueprints.bloque06.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b06_bp = Blueprint('bloque06', __name__, template_folder='../../templates')
 
@@ -42,50 +43,39 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    # Nombre único: limite_while_input
-                    limite_str = request.form.get("limite_while_input", "").strip()
-                    if limite_str == "":
-                        print("⚠️ Debes ingresar el límite del conteo.")
-                    else:
-                        limite = int(limite_str)
-                        if limite > 100:
-                            limite = 100
-                            print("ℹ️ Límite ajustado a 100 para evitar salidas muy largas.")
-                        ejecutar_ejercicio1(limite)
+        if num_ej == 1:
+            # nombre de campo: limite_while_input (coincide con formularios.html)
+            limite_str = request.form.get("limite_while_input", "").strip()
+            if campos_vacios(limite_str):
+                salida_consola = "⚠️ Debes ingresar el límite del conteo."
+            else:
+                limite = int(limite_str)
+                if limite > 100:
+                    limite = 100
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, limite)
 
-                elif num_ej == 2:
-                    frutas_crudas = request.form.get("frutas_input", "").strip()
-                    if frutas_crudas == "":
-                        print("⚠️ Debes ingresar al menos una fruta.")
-                    else:
-                        lista_frutas = [x.strip() for x in frutas_crudas.split(",") if x.strip()]
-                        ejecutar_ejercicio2(lista_frutas)
+        elif num_ej == 2:
+            frutas_crudas = request.form.get("frutas_input", "").strip()
+            if campos_vacios(frutas_crudas):
+                salida_consola = "⚠️ Debes ingresar al menos una fruta."
+            else:
+                lista_frutas = [x.strip() for x in frutas_crudas.split(",") if x.strip()]
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, lista_frutas)
 
-                elif num_ej == 3:
-                    # Nombre único: limite_range_input
-                    limite_str = request.form.get("limite_range_input", "").strip()
-                    if limite_str == "":
-                        print("⚠️ Debes ingresar el límite del rango.")
-                    else:
-                        limite = int(limite_str)
-                        if limite > 100:
-                            limite = 100
-                            print("ℹ️ Límite ajustado a 100.")
-                        ejecutar_ejercicio3(limite)
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            # nombre de campo: limite_range_input (coincide con formularios.html)
+            limite_str = request.form.get("limite_range_input", "").strip()
+            if campos_vacios(limite_str):
+                salida_consola = "⚠️ Debes ingresar el límite del rango."
+            else:
+                limite = int(limite_str)
+                if limite > 100:
+                    limite = 100
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, limite)
 
     return render_template(
         'ejercicio_detalle.html',
