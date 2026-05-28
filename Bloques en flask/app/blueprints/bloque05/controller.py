@@ -75,4 +75,3 @@ def gestionar_ejercicio(num_ej):
         consola=salida_consola,
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
-    )
