@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request
 from app.blueprints.bloque02.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
-from app.contenido import COMPENDIO   # ← import del compendio
+from app.contenido import COMPENDIO
 
 b02_bp = Blueprint('bloque02', __name__, template_folder='../../templates')
 
@@ -24,18 +24,19 @@ DATOS_RETOS = {
     }
 }
 
+
 @b02_bp.route('/concepto')
 def ver_concepto():
     info = COMPENDIO.get("bloque02", {})
     return render_template(
-        'ejercicio_concepto.html',          # nombre corregido (sin typo)
+        'ejercicio_concepto.html',
         bloque_id="bloque02",
         bloque_titulo=info.get("titulo", "Bloque 02"),
         concepto_texto=info.get("concepto", ""),
         ejemplo_codigo=info.get("ejemplo", ""),
         datos_retos_nav=list(DATOS_RETOS.keys())
     )
- 
+
 
 @b02_bp.route('/ejercicio/<int:num_ej>', methods=['GET', 'POST'])
 def gestionar_ejercicio(num_ej):
@@ -46,20 +47,35 @@ def gestionar_ejercicio(num_ej):
     salida_consola = ""
 
     if request.method == 'POST':
-        import io
-        import contextlib
-
+        import io, contextlib
         f = io.StringIO()
         with contextlib.redirect_stdout(f):
             try:
                 if num_ej == 1:
                     ejecutar_ejercicio1()
+
                 elif num_ej == 2:
-                    elementos_web = request.form.get("elementos_input", "10, 20, 30, 40, 50")
-                    lista = [x.strip() for x in elementos_web.split(",") if x.strip()]
-                    ejecutar_ejercicio2(lista)
+                    elementos_str = request.form.get("elementos_input", "").strip()
+                    if elementos_str == "":
+                        print("⚠️ Debes ingresar los elementos de la lista.")
+                    else:
+                        # Convertir a número (float) para que el modelo los muestre como números
+                        lista = []
+                        for x in elementos_str.split(","):
+                            x = x.strip()
+                            if x:
+                                try:
+                                    lista.append(int(x) if '.' not in x else float(x))
+                                except ValueError:
+                                    lista.append(x)  # si no es número, dejarlo como string
+                        if len(lista) < 1:
+                            print("⚠️ La lista debe tener al menos 1 elemento.")
+                        else:
+                            ejecutar_ejercicio2(lista)
+
                 elif num_ej == 3:
                     ejecutar_ejercicio3()
+
             except Exception as e:
                 print(f"❌ Error: {str(e)}")
         salida_consola = f.getvalue()
