@@ -3,12 +3,13 @@ from app.blueprints.bloque14.models import (
     ejecutar_ejercicio1, ejecutar_ejercicio2, ejecutar_ejercicio3
 )
 from app.contenido import COMPENDIO
+from app.utils import ejecutar_y_capturar, campos_vacios
 
 b14_bp = Blueprint('bloque14', __name__, template_folder='../../templates')
 
 DATOS_RETOS = {
     1: {
-        "enunciado": "Desempaqueta (10, 20, 30, 40) asignando explícitamente el primero, el último y agrupando los intermedios en una sublista con el operador *.",
+        "enunciado": "Desempaqueta (10, 20, 30, 40) asignando el primero, el último y agrupando los intermedios con el operador *.",
         "codigo_fuente": "primera, *mitad, ultima = (10, 20, 30, 40)\nprint(primera)  # 10\nprint(mitad)    # [20, 30]\nprint(ultima)   # 40",
         "es_interactivo": True
     },
@@ -42,52 +43,40 @@ def ver_concepto():
 def gestionar_ejercicio(num_ej):
     if num_ej not in DATOS_RETOS:
         num_ej = 1
-
     reto = DATOS_RETOS[num_ej]
     salida_consola = ""
 
     if request.method == 'POST':
-        import io, contextlib
-        f = io.StringIO()
-        with contextlib.redirect_stdout(f):
-            try:
-                if num_ej == 1:
-                    # CORREGIDO: sin default silencioso
-                    datos_crudos = request.form.get("tupla_input", "").strip()
-                    if datos_crudos == "":
-                        print("⚠️ Debes ingresar los valores para desempaquetar.")
-                    else:
-                        tupla_valores = tuple(float(x.strip()) for x in datos_crudos.split(",") if x.strip())
-                        if len(tupla_valores) < 3:
-                            print("⚠️ Necesitas al menos 3 valores para el unpacking con *mitad.")
-                        else:
-                            ejecutar_ejercicio1(tupla_valores)
+        if num_ej == 1:
+            datos = request.form.get("tupla_input", "").strip()
+            if campos_vacios(datos):
+                salida_consola = "⚠️ Debes ingresar los valores para desempaquetar."
+            else:
+                tupla = tuple(float(x.strip()) for x in datos.split(",") if x.strip())
+                if len(tupla) < 3:
+                    salida_consola = "⚠️ Necesitas al menos 3 valores para el unpacking con *mitad."
+                else:
+                    salida_consola = ejecutar_y_capturar(ejecutar_ejercicio1, tupla)
 
-                elif num_ej == 2:
-                    # CORREGIDO: sin default silencioso
-                    lista_cruda = request.form.get("lista_input", "").strip()
-                    if lista_cruda == "":
-                        print("⚠️ Debes ingresar los 3 factores separados por coma.")
-                    else:
-                        lista_valores = [float(x.strip()) for x in lista_cruda.split(",") if x.strip()][:3]
-                        while len(lista_valores) < 3:
-                            lista_valores.append(1.0)
-                        ejecutar_ejercicio2(lista_valores)
+        elif num_ej == 2:
+            lista_cruda = request.form.get("lista_input", "").strip()
+            if campos_vacios(lista_cruda):
+                salida_consola = "⚠️ Debes ingresar los 3 factores separados por coma."
+            else:
+                lista = [float(x.strip()) for x in lista_cruda.split(",") if x.strip()][:3]
+                while len(lista) < 3:
+                    lista.append(1.0)
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio2, lista)
 
-                elif num_ej == 3:
-                    # CORREGIDO: sin defaults silenciosos
-                    llave1 = request.form.get("llave1", "").strip()
-                    valor1 = request.form.get("valor1", "").strip()
-                    llave2 = request.form.get("llave2", "").strip()
-                    valor2 = request.form.get("valor2", "").strip()
-                    if llave1 == "" or valor1 == "" or llave2 == "" or valor2 == "":
-                        print("⚠️ Debes completar los cuatro campos (llave1, valor1, llave2, valor2).")
-                    else:
-                        ejecutar_ejercicio3({llave1: valor1}, {llave2: valor2})
-
-            except Exception as e:
-                print(f"❌ Error: {str(e)}")
-        salida_consola = f.getvalue()
+        elif num_ej == 3:
+            llave1 = request.form.get("llave1", "").strip()
+            valor1 = request.form.get("valor1", "").strip()
+            llave2 = request.form.get("llave2", "").strip()
+            valor2 = request.form.get("valor2", "").strip()
+            if campos_vacios(llave1, valor1, llave2, valor2):
+                salida_consola = "⚠️ Debes completar los cuatro campos."
+            else:
+                salida_consola = ejecutar_y_capturar(ejecutar_ejercicio3, {llave1: valor1}, {llave2: valor2})
 
     return render_template(
         'ejercicio_detalle.html',
